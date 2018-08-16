@@ -1,0 +1,8 @@
+importFrom ("grDevices", "col2rgb", "rgb")
+importFrom ("graphics", "arrows", "contour.default", "lines", "par", "plot", "plot.new", "plot.window", "polygon", "text")
+importFrom ("mvtnorm", "pmvnorm", "dmvnorm")
+exportPattern("^[^\\.]")
+S3method(print, nbpdf)
+S3method(print, nbcdf)
+S3method(plot, nbpdf)
+S3method(plot, nbcdf)

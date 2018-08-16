@@ -1,0 +1,266 @@
+%\VignetteIndexEntry{Bivariate Probability Distributions}
+\documentclass {article}
+\usepackage[a4paper,top=2.6cm,bottom=3.6cm,left=3.6cm,right=3.6cm]{geometry}
+\usepackage{parskip,verbatim,amsmath,amssymb,color}
+\usepackage[nogin]{Sweave}
+\pagestyle{myheadings}
+\setlength{\parskip}{0.28cm}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{xleftmargin=0.75em, formatcom=\color{rin}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=0.75em,formatcom=\color{rout}}
+\DefineVerbatimEnvironment{Serror}{Verbatim}{xleftmargin=0.75em,formatcom=\color{rerr}}
+\newcommand {\stitle}[3]
+{	\title {\vspace {-0.6cm} {\normalsize \underline {#1 #2} } \\[0.8cm] {\textbf {\huge #3} } }
+	\author {\textbf {Abs Spurdle} }
+	\maketitle
+	\markright{Spurdle, A.\hfill #1 #2\hfill}
+	\thispagestyle {empty}
+}
+\newcommand {\sabstract}[1]
+{	\begin {center}
+	\begin {minipage}{14.25cm}
+		{\textsl {#1} }
+	\end {minipage}
+	\end {center}
+	\vspace {0.06cm}
+}
+\definecolor{rin}{rgb}{0, 0, 0.32}
+\definecolor{rout}{rgb}{0, 0.14, 0}
+\definecolor{rerr}{rgb}{0.5, 0.025, 0}
+\SweaveOpts{keep.source=TRUE}
+\SweaveOpts{eps=FALSE}
+\SweaveOpts{prefix.string=temp-bivariate}
+\begin{document}
+
+<<echo=false>>=
+options(continue=" ")
+options(SweaveHooks=list(fig=function()
+par(mar=c(4.1, 4.1, 2.6, 1.6), cex=0.7, cex.main=1)))
+@
+
+\stitle {bivariate}{0.1.5}{Bivariate Probability Distributions}
+
+\sabstract {Provides alternatives to persp() for plotting bivariate functions, including both step and continuous functions. Also, provides convenience functions for constructing and plotting bivariate probability distributions. Currently, only normal distributions are supported but other probability distributions are likely to be added in the near future.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This package provides alternatives to persp() to support bivariate functions and it also provides convenience functions for constructing and plotting bivariate distributions.
+
+The alternatives to persp() can plot both step and continuous functions.
+
+Currently, there are convenience functions for constructing and plotting normal bivariate probability density functions and cumulative distribution functions. Other distributions are likely to be added in the near future. The functions for constructing probability distributions take means, variances and covariance for x and y and return functions which can be evaluated for x and y. The functions for plotting distributions take a function object and can plot either a contour plot or a 3d plot.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Loading The mvtnorm and bivariate Packages}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First we need to load the mvtnorm and bivariate packages.
+<<>>=
+library (mvtnorm)
+library (bivariate)
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Coordinate System}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This package uses a nonstandard coordinate system. It's designed to make it simpler to view cumulative distribution functions.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot3d.empty ()
+@
+\end {center}
+
+Note the directions of x and y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Step Functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can create 3d plots of bivariate step functions using the plot3d.step.regular() or plot3d.step() functions.
+
+Let's create a simple example that's not really a step function. Note that I'm not trying to explain how to create a bivariate step function rather I'm trying to explain how to create a 3d plot of a bivariate step function.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+x = y = 1:4
+f = function (x, y) 2 * x + y ^ 2
+z = outer (x, y, f)
+plot3d.step.regular (z)
+@
+\end {center}
+
+We can use the plot3d.step() function if our x and y values aren't regularly spaced. Our first two arguments are vectors of sorted x and y values.
+
+Refer to the help pages for more information.
+<<eval=FALSE>>=
+?plot3d.step
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Continuous Functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can create 3d plots of bivariate continuous functions using the plot3d.continuous.regular() or plot3d.continuous() functions.
+
+Let's use a similar example to the previous section.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+x = y = 1:4
+f = function (x, y) 2 * x + y ^ 2
+z = outer (x, y, f)
+plot3d.continuous.regular (z)
+@
+\end {center}
+
+We can use the plot3d.continuous() function if our x and y values aren't regularly spaced. Our first two arguments are vectors of sorted x and y values.
+
+Refer to the help pages for more information.
+<<eval=FALSE>>=
+?plot3d.continuous
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Normal Bivariate Probability Density Functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can construct a normal bivariate probability density function using the nbpdf() function. It takes five arguments, the mean of x, the mean of y, the variance of x, the variance of y and the covariance of x and y.
+<<>>=
+f = nbpdf (0, 0, 1, 1, 0)
+@
+
+Alternatively we could use the standard deviations and correlation, using something like:
+<<>>=
+#f = nbpdf (mean.x, mean,y, sd.x ^ 2, sd.y ^ 2, sd.x * sd.y * cor.xy)
+@
+
+We can print our object out if we want to.
+<<>>=
+f
+@
+
+Once we have created our object we can plot it.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f)
+@
+
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f, TRUE)
+@
+\end {center}
+
+Note that we can change the plot's xlab, ylab, xlim, ylim and colours. Refer to the help page for more information.
+<<eval=FALSE>>=
+?nbpdf
+@
+
+The object f is a function so we can evaluate it.
+<<>>=
+f (0, 0)
+@
+
+Note that f's arguments can be vectors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Normal Bivariate Cumulative Distribution Functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can construct a normal bivariate cumulative distribution function using the nbcdf() function. It takes the same arguments as nbpdf().
+<<>>=
+F = nbcdf (0, 0, 1, 1, 0)
+@
+
+Alternatively we could use the standard deviations and correlation, using something like:
+<<>>=
+#F = nbcdf (mean.x, mean,y, sd.x ^ 2, sd.y ^ 2, sd.x * sd.y * cor.xy)
+@
+
+We can print our object out if we want to.
+<<>>=
+F
+@
+
+Once we have created our object we can plot it.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (F)
+@
+
+<<fig=TRUE, width=4.75, height=3>>=
+plot (F, TRUE)
+@
+\end {center}
+
+Note that we can change the plot's xlab, ylab, xlim, ylim and colours. Refer to the help page for more information.
+<<eval=FALSE>>=
+?nbcdf
+@
+
+The object F is a function so we can evaluate it.
+<<>>=
+F (0, 0)
+@
+
+Note that F's arguments can be vectors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Comparing Different Distributions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can compare different distributions using different covariance parameters.
+
+First, let's consider the bivariate distributions from the previous sections with zero correlation/covariance.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f, all=TRUE)
+@
+\end {center}
+
+Note that this requires the probability density function rather than the cumulative distribution function.
+
+Second, let's consider bivariate distributions with positive correlation/covariance.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+f2 = nbpdf (0, 0, 1, 1, 0.75)
+plot (f2, all=TRUE)
+@
+\end {center}
+
+Third, let's consider bivariate distributions with negative correlation/covariance.
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+f3 = nbpdf (0, 0, 1, 1, -0.75)
+plot (f3, all=TRUE)
+@
+\end {center}
+
+The differences between the probability density functions are reasonably obvious. Note that the cumulative distribution function with positive correlation is more angular.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Using Bivariate Cumulative Distributions to Compute Probabilities}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Using a univariate distribution we can compute the probability that X is between two values using something like:
+
+\begin {equation*}
+\mathbb {P} (x_1 < X < x_2)  = F (x_2) - F (x_1)
+\end {equation*}
+
+Using a bivariate distribution we can compute the probability the X and Y are between two pairs of values using something like:
+
+\begin {equation*}
+\mathbb {P} (x_1 < X < x_2, y1 < Y < y2)  = F (x_1, y_1) + F (x_2, x_2) - F (x_1, y_2) - F (x_2, y_1)
+\end {equation*}
+
+We can compute this using something like:
+<<>>=
+x1 = y1 = -1
+x2 = y2 = 1
+compute.bivariate.probability = function (F, x1, x2, y1, y2)
+    F (x1, y1) + F (x2, y2) - F (x1, y2) - F (x2, y1)
+compute.bivariate.probability (F, x1, x2, y1, y2)
+@
+
+\newpage
+Our functions are vectorized so we could do something like:
+<<>>=
+x1 = y1 = -1:-3
+x2 = y2 = 1:3
+p = compute.bivariate.probability (F, x1, x2, y1, y2)
+cbind (x1, x2, y1, y2, p)
+@
+
+\end{document}
