@@ -10,7 +10,7 @@
 \DefineVerbatimEnvironment{Serror}{Verbatim}{xleftmargin=0.75em,formatcom=\color{rerr}}
 \newcommand {\stitle}[3]
 {	\title {\vspace {-0.6cm} {\normalsize \underline {#1 #2} } \\[0.8cm] {\textbf {\huge #3} } }
-	\author {\textbf {Abs Spurdle} }
+	\author {\textbf {Abby Spurdle} }
 	\maketitle
 	\markright{Spurdle, A.\hfill #1 #2\hfill}
 	\thispagestyle {empty}
@@ -37,7 +37,7 @@ options(SweaveHooks=list(fig=function()
 par(mar=c(4.1, 4.1, 2.6, 1.6), cex=0.7, cex.main=1)))
 @
 
-\stitle {bivariate}{0.1.5}{Bivariate Probability Distributions}
+\stitle {bivariate}{0.1.6}{Bivariate Probability Distributions}
 
 \sabstract {Provides alternatives to persp() for plotting bivariate functions, including both step and continuous functions. Also, provides convenience functions for constructing and plotting bivariate probability distributions. Currently, only normal distributions are supported but other probability distributions are likely to be added in the near future.}
 
