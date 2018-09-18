@@ -9,13 +9,9 @@ plot3d.empty = function ()
 	par (p0)
 }
 
-plot3d.step.regular = function (z, xlab="x", ylab="y", zlim, ..., boundary=FALSE)
-{   x = 1:nrow (z)
-    y = 1:ncol (z)
-    plot3d.step (x, y, z, xlab, ylab, zlim, ..., boundary=boundary)
-}
-
-plot3d.step = function (x, y, z, xlab="x", ylab="y", zlim, ..., boundary=FALSE)
+#length (x) = nrow (z) + 1
+#length (y) = ncol (z) + 1
+plot3d.discrete = function (x, y, z, xlab="x", ylab="y", zlim, ..., boundary=FALSE)
 {   p0 = par (mar=c (1.75, 0.175, 0.9, 0.175) )
 	plot.new ()
 	plot.window (c (-0.75, 0.75), c (0, 1.5) )
@@ -23,18 +19,21 @@ plot3d.step = function (x, y, z, xlab="x", ylab="y", zlim, ..., boundary=FALSE)
 	.plotbpdf.poly (1, c (0, 0, 1, 1), c (0, 1, 1, 0) )
 	.plotbpdf.poly (c (0, 0, 1, 1), 1, c (0, 1, 1, 0) )
 	.plotbpdf.labs (c (xlab, ylab) )
+	if (missing (x) )
+		x = 1:(nrow (z) + 1)
+	if (missing (y) )
+		y = 1:(ncol (z) + 1)
 	nx = length (x) - 1
 	ny = length (y) - 1
 	x = (x - min (x) ) / diff (range (x) )
 	y = (y - min (y) ) / diff (range (y) )
 	if (missing (zlim) )
-    {   zlim = range (z)
-        d = diff (zlim)
-        if (d == 0)
-            z [TRUE] = 0
-	    else
-	        z = (z - zlim [1]) / d
-	}
+		zlim = range (z)
+    d = diff (zlim)
+    if (d == 0)
+		z [TRUE] = 0
+	else
+	    z = (z - zlim [1]) / d
 	fc = rgb (0.7, 0.75, 1)
 	ec = "grey"
 	for (i in nx:1)
@@ -67,32 +66,31 @@ plot3d.step = function (x, y, z, xlab="x", ylab="y", zlim, ..., boundary=FALSE)
     par (p0)
 }
 
-plot3d.continuous.regular = function (z, xlab="x", ylab="y", zlim, ..., col1=rgb (0.3, 0.6, 1), col2="white")
-{   x = 1:nrow (z)
-    y = 1:ncol (z)
-    plot3d.continuous (x, y, z, xlab, ylab, zlim, ..., col1=col1, col2=col2)
-}
-
+#length (x) = nrow (z)
+#length (y) = ncol (z)
 plot3d.continuous = function (x, y, z, xlab="x", ylab="y", zlim, ..., col1=rgb (0.3, 0.6, 1), col2="white")
-{   p0 = par (mar=c (1.75, 0.175, 0.9, 0.175) )
+{	p0 = par (mar=c (1.75, 0.175, 0.9, 0.175) )
 	plot.new ()
 	plot.window (c (-0.75, 0.75), c (0, 1.5) )
 	.plotbpdf.plane.xy ()
 	.plotbpdf.poly (1, c (0, 0, 1, 1), c (0, 1, 1, 0) )
 	.plotbpdf.poly (c (0, 0, 1, 1), 1, c (0, 1, 1, 0) )
 	.plotbpdf.labs (c (xlab, ylab) )
+	if (missing (x) )
+		x = 1:nrow (z)
+	if (missing (y) )
+		y = 1:ncol (z)
 	nx = length (x) - 1
 	ny = length (y) - 1
 	x = (x - min (x) ) / diff (range (x) )
 	y = (y - min (y) ) / diff (range (y) )
 	if (missing (zlim) )
-    {   zlim = range (z)
-        d = diff (zlim)
-        if (d == 0)
-            z [TRUE] = 0
-	    else
-	        z = (z - zlim [1]) / d
-	}
+		zlim = range (z)
+    d = diff (zlim)
+    if (d == 0)
+		z [TRUE] = 0
+	else
+	    z = (z - zlim [1]) / d
 	for (i in nx:1)
 	    for (j in ny:1)
     	{	x1 = x [i]
