@@ -14,10 +14,10 @@ cubvcdf (a.X, b.X, a.Y, b.Y)
 \value{These functions return functions.}
 \seealso{\link{dubvpmf.f}, \link{dubvcdf.f}, \link{cubvpdf.f}, \link{cubvcdf.f}}
 \arguments{
-\item{a.X}{Scalar, giving the a value of X.}
-\item{b.X}{Scalar, giving the b value of X.}
-\item{a.Y}{Scalar, giving the a value of Y.}
-\item{b.Y}{Scalar, giving the b value of Y.}
+\item{a.X}{Numeric scalar, giving the a value of X.}
+\item{b.X}{Numeric scalar, giving the b value of X.}
+\item{a.Y}{Numeric scalar, giving the a value of Y.}
+\item{b.Y}{Numeric scalar, giving the b value of Y.}
 }
 \examples{
 #construct some discrete uniform distributions

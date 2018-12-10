@@ -10,9 +10,9 @@ bnbvcdf (n, p.X, p.Y)
 \value{These functions return functions.}
 \seealso{\link{bnbvpmf.f}, \link{bnbvcdf.f}}
 \arguments{
-\item{n}{Scalar, giving the number of trials.}
-\item{p.X}{Scalar, giving the probability of the first event.}
-\item{p.Y}{Scalar, giving the probability of the second event.}
+\item{n}{Integer scalar, giving the number of trials.}
+\item{p.X}{Numeric scalar, giving the probability of the first event.}
+\item{p.Y}{Numeric scalar, giving the probability of the second event.}
 }
 \examples{
 #construct some binomial distributions

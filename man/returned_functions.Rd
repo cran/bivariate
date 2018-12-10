@@ -1,4 +1,4 @@
-\name{returned.functions}
+\name{returned_functions}
 \alias{dubvpmf.f}
 \alias{dubvcdf.f}
 \alias{bnbvpmf.f}

@@ -1,13 +1,16 @@
 Package: bivariate
 Title: Bivariate Probability Distributions
-Version: 0.2.2
-Date: 2018-09-18
-Author: Abby Spurdle
-Maintainer: Abby Spurdle <spurdle.a@gmail.com>
-Description: Contains convenience functions for constructing and plotting bivariate probability distributions (probability mass functions, probability density functions and cumulative distribution functions). Currently supports uniform (discrete and continuous), binomial, Poisson, normal, bimodal and kernel distributions.
+Version: 0.3.0
+Date: 2018-12-10
 License: GPL (>= 2)
-Depends: mvtnorm, KernSmooth
+Maintainer: Abby Spurdle <spurdle.a@gmail.com>
+Author: Abby Spurdle
+URL: https://sites.google.com/site/asrpws
+Description: Contains convenience functions for constructing and plotting bivariate probability distributions (probability mass functions, probability density functions and cumulative distribution functions). Currently, supports uniform (discrete and continuous), binomial, Poisson, normal, bimodal and kernel distributions.
+Depends: graphics
+Imports: barsurf, mvtnorm, KernSmooth
+Suggests: intoo, empirical, moments, MASS
 NeedsCompilation: no
-Packaged: 2018-09-18 00:57:03 UTC; Student9
+Packaged: 2018-12-10 01:14:15 UTC; Student9
 Repository: CRAN
-Date/Publication: 2018-09-18 08:10:11 UTC
+Date/Publication: 2018-12-10 09:20:06 UTC

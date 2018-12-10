@@ -1,24 +1,18 @@
-kbvpdf = function (x, y, bandwidth.X, bandwidth.Y)
-{   kbvpdf.f = function (x, y) {.kbvpdf.eval (x, y)}
-	xy = cbind (x, y)
-	bandwidth = c (bandwidth.X, bandwidth.Y)
-    attributes (kbvpdf.f) = list (class="kbvpdf", xy=xy, bandwidth=bandwidth)
+kbvpdf = function (x, y, bw.X, bw.Y)
+{   kbvpdf.f = function (x, y) {NULL}
+	data = cbind (x, y)
+	bw = c (bw.X, bw.Y)
+    attributes (kbvpdf.f) = list (class="kbvpdf", bw=bw, data=data)
     kbvpdf.f
 }
 
-.kbvpdf.eval = function (x, y)
-	stop (".kbvpdf.eval () not implemented yet")
-	
-kbvcdf = function (x, y, bandwidth.X, bandwidth.Y)
-{   kbvcdf.f = function (x, y) {.kbvcdf.eval (x, y)}
-	xy = cbind (x, y)
-	bandwidth = c (bandwidth.X, bandwidth.Y)
-    attributes (kbvcdf.f) = list (class="kbvcdf", xy=xy, bandwidth=bandwidth)
+kbvcdf = function (x, y, bw.X, bw.Y)
+{   kbvcdf.f = function (x, y) {NULL}
+	data = cbind (x, y)
+	bw = c (bw.X, bw.Y)
+    attributes (kbvcdf.f) = list (class="kbvcdf", data=data, bw=bw)
     kbvcdf.f
 }
-
-.kbvcdf.eval = function (x, y)
-	stop (".kbvcdf.eval () not implemented yet")
 
 .integrate.model = function (model)
 {	x = model$x1
@@ -35,8 +29,6 @@ kbvcdf = function (x, y, bandwidth.X, bandwidth.Y)
 	nc = ncol (h) - 1
 	V = matrix (0, nrow=nr, ncol=nc)
 
-	#compute cuboid volumes
-	#note that trapezoids (in 3D) would be better
 	for (i in 1:nr)
 		for (j in 1:nc)
 		{	sub.h = h [i:(i + 1), j:(j + 1)]
@@ -61,72 +53,58 @@ kbvcdf = function (x, y, bandwidth.X, bandwidth.Y)
 	F
 }
 
-print.kbvpdf = function (x, ...)
-{	kbvpdf.f = x
-
-	n = nrow (attributes (kbvpdf.f)$xy)
-	if (n > 30)
-		attributes (kbvpdf.f)$xy = NULL
-	print.dubvpmf (kbvpdf.f, ...)
-	if (n > 30)
-		cat ("note that x attribute not printed\n")
-}
-
-print.kbvcdf = function (x, ...)
-	print.kbvpdf (x, ...)
-
-plot.kbvpdf = function (x, use.plot3d=FALSE, np=20, xlab="x", ylab="y", xlim, ylim, zlim, ..., all=FALSE)
+plot.kbvpdf = function (x, use.plot3d=FALSE, npoints=30, xlim, ylim, ..., all=FALSE)
 {   kbvpdf.f = x
 
-	this = attributes (kbvpdf.f)
+	. = attributes (kbvpdf.f)
 	if (all)
     {   par (mfrow=c (2, 2) )
         p0 = par (mar=c (2, 2.5, 1, 0.175) )
         kbvcdf.f = kbvcdf (0, 0, 0, 0)
-		attributes (kbvcdf.f)$xy = attributes (kbvpdf.f)$xy
-		attributes (kbvcdf.f)$bandwidth = attributes (kbvpdf.f)$bandwidth
-        plot (kbvpdf.f, FALSE, np, xlab, ylab, xlim, ylim, zlim, drawlabels=FALSE, ...)
-        plot (kbvpdf.f, TRUE, np, xlab, ylab, xlim, ylim, zlim, ...)
-        plot (kbvcdf.f, FALSE, np, xlab, ylab, xlim, ylim, zlim, drawlabels=FALSE, ...)
-        plot (kbvcdf.f, TRUE, np, xlab, ylab, xlim, ylim, zlim, ...)
+		attributes (kbvcdf.f)$data = attributes (kbvpdf.f)$data
+		attributes (kbvcdf.f)$bw = attributes (kbvpdf.f)$bw
+        plot (kbvpdf.f, FALSE, xlab="", ylab="", npoints, xlim, ylim, drawlabels=FALSE)
+        plot (kbvpdf.f, TRUE, npoints, xlim, ylim, ...)
+        plot (kbvcdf.f, FALSE, xlab="", ylab="", npoints, xlim, ylim, drawlabels=FALSE)
+        plot (kbvcdf.f, TRUE, npoints, xlim, ylim, ...)
         par (p0)
     }
 	else
 	{	if (missing (xlim) )
-			xlim = range (this$xy [,1])
+			xlim = range (.$data [,1]) + c (-1, 1) * .$bw [1]
 		if (missing (ylim) )
-			ylim = range (this$xy [,2])
-		x = seq (xlim [1], xlim [2], length.out=np)
-		y = seq (ylim [1], ylim [2], length.out=np)
-		z =	bkde2D (this$xy, this$bandwidth, c (length (x), length (y) ), list (xlim, ylim), FALSE)$fhat
+			ylim = range (.$data [,2]) + c (-1, 1) * .$bw [2]
+		x = seq (xlim [1], xlim [2], length.out=npoints)
+		y = seq (ylim [1], ylim [2], length.out=npoints)
+		z =	bkde2D (.$data, .$bw, c (npoints, npoints), list (xlim, ylim), FALSE)$fhat
 		if (use.plot3d)
-			plot3d.continuous (,, z, zlim=zlim, ...)
+			plot3d.surf (,,z, ...)
 		else
 		{   p0 = par (pty="s")
-			contour.default (z=z, xlab=xlab, ylab=ylab, ...)
+			.contour (x, y, z, ...)
 			par (p0)
 		}
 	}
 }
 
-plot.kbvcdf = function (x, use.plot3d=FALSE, np=20, xlab="x", ylab="y", xlim, ylim, zlim, ...)
-{   this = attributes (x)
+plot.kbvcdf = function (x, use.plot3d=FALSE, npoints=30, xlim, ylim, ...)
+{   . = attributes (x)
 
     if (missing (xlim) )
-		xlim = range (this$xy [,1])
+		xlim = range (.$data [,1]) + c (-1, 1) * .$bw [1]
 	if (missing (ylim) )
-		ylim = range (this$xy [,2])
-	x = seq (xlim [1], xlim [2], length.out=np)
-	y = seq (ylim [1], ylim [2], length.out=np)
-	xlim2 = c (x [2], x [np - 1])
-	ylim2 = c (y [2], y [np - 1])
-	model =	bkde2D (this$xy, this$bandwidth, c (np - 2, np - 2), list (xlim2, ylim2), FALSE)
+		ylim = range (.$data [,2]) + c (-1, 1) * .$bw [2]
+	x = seq (xlim [1], xlim [2], length.out=npoints)
+	y = seq (ylim [1], ylim [2], length.out=npoints)
+	xlim2 = c (x [2], x [npoints - 1])
+	ylim2 = c (y [2], y [npoints - 1])
+	model =	bkde2D (.$data, .$bw, c (npoints - 2, npoints - 2), list (xlim2, ylim2), FALSE)
 	z = .integrate.model (model)
 	if (use.plot3d)
-		plot3d.continuous (,, z, zlim=zlim, ...)
+		plot3d.surf (,,z, ...)
 	else
 	{   p0 = par (pty="s")
-		contour.default (z=z, xlab=xlab, ylab=ylab, ...)
+		.contour (x, y, z, ...)
 		par (p0)
 	}
 }

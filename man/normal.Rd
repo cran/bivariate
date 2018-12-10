@@ -10,11 +10,11 @@ nbvcdf (mean.X, mean.Y, variance.X, variance.Y, covariance)
 \value{These functions return functions.}
 \seealso{\link{nbvpdf.f}, \link{nbvcdf.f}}
 \arguments{
-\item{mean.X}{Scalar, giving the mean of X.}
-\item{mean.Y}{Scalar, giving the mean of Y.}
-\item{variance.X}{Scalar, giving the variance of X.}
-\item{variance.Y}{Scalar, giving the variance of Y.}
-\item{covariance}{Scalar, giving the covariance of X and Y.}
+\item{mean.X}{Numeric scalar, giving the mean of X.}
+\item{mean.Y}{Numeric scalar, giving the mean of Y.}
+\item{variance.X}{Numeric scalar, giving the variance of X.}
+\item{variance.Y}{Numeric scalar, giving the variance of Y.}
+\item{covariance}{Numeric scalar, giving the covariance of X and Y.}
 }
 \examples{
 #construct some normal distributions
