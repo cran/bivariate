@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{Bivariate Probability Distributions}
-\documentclass {article}
+\documentclass{article}
 \usepackage[a4paper,top=2.6cm,bottom=3.6cm,left=3.6cm,right=3.6cm]{geometry}
 \usepackage{parskip,verbatim,amsmath,amssymb,color}
 \usepackage[nogin]{Sweave}
@@ -37,18 +37,18 @@ options(SweaveHooks=list(fig=function()
 par(mar=c(4.1, 4.1, 2.6, 1.6), cex=0.7, cex.main=1)))
 @
 
-\stitle {bivariate}{0.3.0}{Bivariate Probability Distributions}
+\stitle {bivariate}{0.3.1}{Bivariate Probability Distributions}
 
-\sabstract {Contains convenience functions for constructing and plotting bivariate probability distributions (probability mass functions, probability density functions and cumulative distribution functions). Currently, supports uniform (discrete and continuous), binomial, Poisson, normal, bimodal and kernel distributions.}
+\sabstract {Contains convenience functions for constructing and plotting bivariate probability distributions (probability mass functions, probability density functions and cumulative distribution functions). Currently, supports uniform (discrete and continuous), binomial, Poisson, normal and bimodal distributions, and kernel smoothing.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Pre-Intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This package uses objects, which are also functions, which are also models, which are also probability distributions.
+This package is based on function objects.
 
-Some functions (constructors) return other functions (models), which can be evaluated. The resulting functions have attributes (which along with their arguments) determine their return values.
+Some functions (constructors) return other functions (models), which can be evaluated.
 
-This is intermediate between a standard object oriented approach and a functional approach. And I believe that this is the best approach for implementing probability distributions, especially nonparametric probability distributions.
+This is equivalent but different to (a subset of) the d, p, q, r approach used in R's stats package.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Introduction}
@@ -63,8 +63,7 @@ Currently, there are convenience functions for constructing and plotting:
 	\item Continuous bivariate uniform distributions.
 	\item Bivariate normal distributions*.
 	\item Bivariate bimodal distributions*.
-	\item Bivariate kernel distributions*.\\
-	(Probability density functions and cumulative distribution functions resulting from kernel smoothing).
+	\item Bivariate probability distributions resulting from kernel smoothing*.
 \end {enumerate}
 
 Some of these distributions are simply the product of their marginal distributions. Others, marked with an * are not necessarily so.
@@ -80,16 +79,10 @@ Refer to the barsurf package for information on how to change colors, if require
 Note that I'm considering alternative formulations of bivariate binomial distributions. And it's possible that I may support bivariate-like (but trivariate) Dirichlet distributions in the near future.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Important Notes}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Here, PMFs and PDFs are equivalent to R's ``d'' functions. And CDFs are equivalent to R's ``p'' functions. R's ``q'' and ``r'' functions are not supported.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Loading The Packages}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-I'm going to load (and attach) the intoo, bivariate and moments packages:
+I'm going to load (and attach) the bivariate and moments packages:
 <<>>=
-library (intoo)
 library (bivariate)
 library (moments)
 @
@@ -102,16 +95,6 @@ We can construct a discrete bivariate uniform probability mass function as the p
 We can use the dubvpmf() function. It takes four arguments, the a and b values of X and the a and b values of Y.
 <<>>=
 f = dubvpmf (1, 10, 1, 10)
-@
-
-We can print the object directly, however, I recommend using the object.info() function from the intoo package.
-<<>>=
-object.info (f)
-@
-
-We can access a single attribute using the attribute operator, also from the intoo package, if required.
-<<>>=
-f %$% n
 @
 
 We can plot the probability mass function.
@@ -253,11 +236,6 @@ Alternatively we could use the standard deviations and correlation, using someth
 #f = nbvpdf (mean.x, mean,y, sd.x ^ 2, sd.y ^ 2, sd.x * sd.y * cor.xy)
 @
 
-It may be useful to print our object, here.
-<<>>=
-object.info (f)
-@
-
 Once we have constructed our object we can plot it.
 
 \begin {center}
@@ -389,7 +367,7 @@ plot (f3, npoints=20, all=TRUE)
 \end {center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Bivariate Kernel Distributions*}
+\section* {Bivariate Probability Distributions Resulting from Kernel Smoothing*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Ripley and Wand (2015) provide the KernSmooth package.
 
@@ -406,13 +384,7 @@ attach (geyser)
 f = kbvpdf (duration, waiting, 0.7, 7)
 @
 
-Again, it may be useful to print our object, here.
-<<>>=
-object.info (f)
-@
-
-And again, once we have constructed our object we can plot it.
-
+Again, once we have constructed our object we can plot it.
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
 
@@ -442,15 +414,11 @@ Reiterating, we can't evaluate these functions. Refer to the empirical package t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {References}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Spurdle, A. (2018). intoo: Object Oriented Intelligence.
-
 Spurdle, A. (2018). barsurf: Minimal Bar Plots and Surface Plots in 3D.
 
 Hothorn, T., Bretz, F., Genz, A., Mi, X. \& Miwa, T. (2018). mvtnorm: Multivariate Normal and t Distributions.
 
 Ripley, B. \& Wand, M. (2015). KernSmooth: Functions for Kernel Smoothing Supporting Wand \& Jones (1995).
-
-Spurdle, A. (2018). empirical: Probability Distributions as Models of Data.
 
 Komsta, L. \& Novomestky, F. (2015). moments: Moments, cumulants, skewness, kurtosis and related tests.
 
@@ -482,10 +450,11 @@ Note that these aren't necessarily the most efficient ways of doing it.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-str (geyser)
+head (geyser, 3)
+tail (geyser, 3)
 summary (geyser)
-cov (geyser)
 skewness (geyser)
+cov (geyser)
 plot (duration, waiting)
 @
 \end {center}

@@ -1,4 +1,4 @@
-23835ef9baadc5bc2e8b4c3b9d7fc49d *DESCRIPTION
+b1b8b64d0108e067db1e430adf35602b *DESCRIPTION
 551bd5c6c06ac85bdd1760f17989fee0 *NAMESPACE
 626a9714448a588c14fad8a34402ebe3 *R/bimodal.r
 c14f3218730c36620e0361b52fe533d7 *R/binomial.r
@@ -10,9 +10,9 @@ dd88f4718e4e0680eb856b52eacff6f0 *R/normal.r
 5343a403dca3fb361c3a1455d27bd3dd *R/poisson.r
 4f375cdf53f5a54777aa511075da0882 *R/returned_functions.r
 b5cd409cf0f53d2a4efbcae94f4c7e03 *build/vignette.rds
-c150a676b05abd1b3ce823dad2be9603 *inst/doc/bivariate.R
-f4a6ddfd0028951f9fac12bd46beb0ae *inst/doc/bivariate.Rnw
-69e7974d8bdba0c34d223ceff67677d4 *inst/doc/bivariate.pdf
+7760d5443261e0d5a53ea71dfa7979b9 *inst/doc/bivariate.R
+19c277559f8ea76a0f6f1060081765f2 *inst/doc/bivariate.Rnw
+729bf7b16c403b3e81879c7cddec1b90 *inst/doc/bivariate.pdf
 da5568af423ff1776b859c19135f6f5b *man/bimodal.Rd
 b915baa37592cea1d771c24fd159c950 *man/binomial.Rd
 b11f593271bb28df3f715fabedb271c5 *man/kernel.Rd
@@ -22,4 +22,4 @@ a469c1e39124ad981acd7a97a681de26 *man/normal.Rd
 79ec036cdf28324945994349615d6428 *man/returned_functions.Rd
 8c55985130474e6d06a005873439cd31 *man/uniform.Rd
 c287b2ae104e277047efafa78f3ffb41 *vignettes/Makefile
-f4a6ddfd0028951f9fac12bd46beb0ae *vignettes/bivariate.Rnw
+19c277559f8ea76a0f6f1060081765f2 *vignettes/bivariate.Rnw
