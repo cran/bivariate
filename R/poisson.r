@@ -1,28 +1,27 @@
-.is.lambda.ok = function (lambda)
+.check.lambda.ok = function (lambda)
 {	if (lambda [1] <= 0 || lambda [2] <= 0)
-		stop ("\nlambda[1] and lambda[2] need to be > 0\nso, mean.X and mean.Y need to be > covariance")
+		stop ("\nlambda.1 and lambda.2 need to be > 0\nso, mean.X and mean.Y need to be > cov")
 }
 
-pbvpmf = function (mean.X, mean.Y, covariance)
-{   pbvpmf.f = function (x, y)
-	{	x = as.integer (x)
-		y = as.integer (y)
-		stopifnot (length (x) == length (y) )
-		.pbvpmf.eval (x, y)
+pbvpmf = function (lambda.1, lambda.2, lambda.3)
+{   f = function (x, y)
+	{	. = THAT ()
+		v = .val.integer.args (x, y)
+		.pbvpmf.eval (., v$x, v$y)
 	}
-	lambda = c (mean.X - covariance, mean.Y - covariance, covariance)
-	.is.lambda.ok (lambda)
-    attributes (pbvpmf.f) = list (class="pbvpmf", lambda=lambda)
-    pbvpmf.f
+	lambda = c (lambda.1, lambda.2, lambda.3)
+	.check.lambda.ok (lambda)
+
+	f = .bv (f)
+    EXTEND (f, "pbvpmf", lambda)
 }
 
-.pbvpmf.eval = function (x, y)
-{   . = attributes (sys.function (-1) )
-	.pbvpmf.eval.2 (.$lambda, x, y)
-}
+pbvpmf.2 = function (mean.X, mean.Y, cov)
+	pbvpmf (mean.X - cov, mean.Y - cov, cov)
 
-.pbvpmf.eval.2 = function (lambda, x, y)
-{   t1 = exp (-sum (lambda) )
+.pbvpmf.eval = function (., x, y)
+{   lambda = .$lambda
+	t1 = exp (-sum (lambda) )
 	t4b = lambda [3] / lambda [1] / lambda [2]
     n = length (x)
     z = numeric (n)
@@ -41,22 +40,24 @@ pbvpmf = function (mean.X, mean.Y, covariance)
     z
 }
 
-pbvcdf = function (mean.X, mean.Y, covariance)
-{   pbvcdf.f = function (x, y)
-	{	x = as.integer (x)
-		y = as.integer (y)
-		stopifnot (length (x) == length (y) )
-		.pbvcdf.eval (x, y)
+pbvcdf = function (lambda.1, lambda.2, lambda.3)
+{   f = function (x, y)
+	{	. = THAT ()
+		v = .val.integer.args (x, y)
+		.pbvcdf.eval (., v$x, v$y)
 	}
-	lambda = c (mean.X - covariance, mean.Y - covariance, covariance)
-	.is.lambda.ok (lambda)
-    attributes (pbvcdf.f) = list (class="pbvcdf", lambda=lambda)
-    pbvcdf.f
+	lambda = c (lambda.1, lambda.2, lambda.3)
+	.check.lambda.ok (lambda)
+
+	f = .bv (f)
+    EXTEND (f, "pbvcdf", lambda)
 }
 
-.pbvcdf.eval = function (x, y)
-{   . = attributes (sys.function (-1) )
-    n = length (x)
+pbvcdf.2 = function (mean.X, mean.Y, cov)
+	pbvcdf (mean.X - cov, mean.Y - cov, cov)
+
+.pbvcdf.eval = function (., x, y)
+{   n = length (x)
     z = numeric (n)
     for (i in 1:n)
 	{	if (x [i] < 0 || y [i] < 0)
@@ -71,15 +72,15 @@ pbvcdf = function (mean.X, mean.Y, covariance)
 {	z = 0
 	for (i in 0:x)
 		for (j in 0:y)
-			z = z + .pbvpmf.eval.2 (lambda, i, j)
+			z = z + .pbvpmf.eval (lambda, i, j)
 	z
 }
 
-.outer.pbvcdf = function (pbvcdf.f, xmax, ymax)
+.pbvcdf.outer = function (pbvcdf.f, xmax, ymax)
 {	pbvpmf.f = pbvpmf (1, 1, 0)
 	attributes (pbvpmf.f)$lambda = attributes (pbvcdf.f)$lambda
 	zf = outer (0:xmax, 0:ymax, pbvpmf.f)
-	zF = matrix (0, nrow=xmax + 1, ncol=ymax + 1)
+	zF = matrix (0, xmax + 1, ymax + 1)
 	for (i in 1:(xmax + 1) )
 		for (j in 1:(ymax + 1) )
 			{	I = 1:i
@@ -89,11 +90,8 @@ pbvcdf = function (mean.X, mean.Y, covariance)
 	zF
 }
 
-plot.pbvpmf = function (x, xmax, ymax, ...)
-{   is.pbvpmf = (any (class (x) == "pbvpmf") )
-	f = x
-
-    . = attributes (f)
+.plot.pbv = function (f, use.plot3d, xmax, ymax, ..., is.cdf=FALSE)
+{   . = attributes (f)
     if (missing (xmax) )
 	{	mean.x = .$lambda [1] + .$lambda [3]
 		xmax = as.integer (2.5 * mean.x)
@@ -102,15 +100,23 @@ plot.pbvpmf = function (x, xmax, ymax, ...)
 	{	mean.y = .$lambda [2] + .$lambda [3]
 		ymax = as.integer (2.5 * mean.y)
 	}
-	if (is.pbvpmf)
-	{	x = 0:xmax
-		y = 0:ymax
-		z = outer (x, y, f)
-	}
+	x = 0:xmax
+	y = 0:ymax
+	if (is.cdf)
+		z = .pbvcdf.outer (f, xmax, ymax)
 	else
-		z = .outer.pbvcdf (f, xmax, ymax)
-	plot3d.bar (,,z, ...)
+		z = outer (x, y, f)
+	.plot.bv.2 (FALSE, use.plot3d, is.cdf, x, y, z, ...)
 }
 
-plot.pbvcdf = function (x, xmax, ymax, ...)
-      plot.pbvpmf (x, xmax, ymax, ...)
+plot.pbvpmf = function (x, use.plot3d=FALSE, xmax, ymax, ..., all=FALSE)
+{	if (all)
+	{	F = pbvcdf (1, 1, 0)
+		.plot.bv.all (x, F, xmax, ymax, ...)
+	}
+	else
+		.plot.pbv (x, use.plot3d, xmax, ymax, ...)
+}
+
+plot.pbvcdf = function (x, use.plot3d=FALSE, xmax, ymax, ...)
+	.plot.pbv (x, use.plot3d, xmax, ymax, ..., is.cdf=TRUE)

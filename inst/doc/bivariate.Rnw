@@ -35,73 +35,90 @@
 options(continue=" ")
 options(SweaveHooks=list(fig=function()
 par(mar=c(4.1, 4.1, 2.6, 1.6), cex=0.7, cex.main=1)))
+
+set.seed (1)
 @
 
-\stitle {bivariate}{0.3.1}{Bivariate Probability Distributions}
+\stitle {bivariate}{0.4.1}{Bivariate Probability Distributions}
 
-\sabstract {Contains convenience functions for constructing and plotting bivariate probability distributions (probability mass functions, probability density functions and cumulative distribution functions). Currently, supports uniform (discrete and continuous), binomial, Poisson, normal and bimodal distributions, and kernel smoothing.}
+\sabstract {Contains convenience functions for constructing, plotting and evaluating bivariate probability distributions, including their probability mass functions, probability density functions and cumulative distribution functions. Supports uniform (discrete and continuous), binomial, Poisson, categorical, normal, bimodal and Dirichlet (trivariate) distributions, and kernel smoothing and empirical cumulative distribution functions.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Pre-Intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This package is based on function objects.
 
-Some functions (constructors) return other functions (models), which can be evaluated.
+Some functions (constructors) return other functions (probability distributions), which can be evaluated.
 
 This is equivalent but different to (a subset of) the d, p, q, r approach used in R's stats package.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This package imports and uses the barsurf package, which contains the plot3d.bar() and plot3d.surf() functions.
+This package contains convenience functions for constructing, plotting and evaluating bivariate probability distributions, including their probability mass functions, probability density functions and cumulative distribution functions.
 
-Currently, there are convenience functions for constructing and plotting:
+It supports the following parametric probability distributions:
 \begin {enumerate}
-	\item Discrete bivariate uniform distributions.
-	\item Bivariate binomial distributions.
-	\item Bivariate Poisson distributions*.
-	\item Continuous bivariate uniform distributions.
-	\item Bivariate normal distributions*.
-	\item Bivariate bimodal distributions*.
-	\item Bivariate probability distributions resulting from kernel smoothing*.
+	\item \textbf {Discrete} bivariate \textbf {Uniform} distributions.
+	\item Bivariate \textbf {Binomial} distributions.
+	\item Bivariate \textbf {Poisson} distributions*.
+	\item Bivariate \textbf {Categorical} distributions*.
+	\item \textbf {Continuous} bivariate \textbf {Uniform} distributions.
+	\item Bivariate \textbf {Normal} distributions*.
+	\item Bivariate \textbf {Bimodal} distributions*.
+	\item Trivariate \textbf {Dirichlet} distributions*.
+\end {enumerate}
+
+\newpage
+And it supports the following nonparametric probability distributions:
+\begin {enumerate}
+	\item Bivariate \textbf {Kernel} density estimates*.
+	\item Bivariate \textbf {Empirical} cumulative distribution functions*.
 \end {enumerate}
 
 Some of these distributions are simply the product of their marginal distributions. Others, marked with an * are not necessarily so.
 
-We can compute either their probability mass function (PMF) or their probability density function (PDF), and their cumulative distribution function (CDF). Note that I think we should recognize bivariate CDFs, which don't appear in probability and statistics literature frequently. Refer to Appendix 1 for information on how to compute bivariate probabilities.
+In general, we can compute their probability mass function (PMF) or their probability density function (PDF), and their cumulative distribution function (CDF).
 
-The functions for constructing probability distributions take some parameters and return functions which can be evaluated for x and y, except for kernel distributions. Note that discrete probability distributions convert their arguments to integers before evaluation.
+The functions for constructing probability distributions take some parameters and return functions which can be evaluated for x and y, except for kernel density estimates.
+
+Note that discrete probability distributions convert their arguments to integers before evaluation.
  
-The functions for plotting discrete distributions take a function object and plot a 3d bar plot. The functions for plotting continuous distributions take a function object and can plot either a 2d contour plot or a 3d surface plot.
-  
-Refer to the barsurf package for information on how to change colors, if required.
+The functions for plotting discrete distributions take a function object and can plot either a heat map or a 3d bar plot. Most of the functions for plotting continuous distributions take a function object and can plot either a contour plot or a 3d surface plot.
 
-Note that I'm considering alternative formulations of bivariate binomial distributions. And it's possible that I may support bivariate-like (but trivariate) Dirichlet distributions in the near future.
+Refer to my barsurf package for information on how to customize plots, if required.
+
+Note that my probhat package supports kernel smoothing, more generally.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Loading The Packages}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-I'm going to load (and attach) the bivariate and moments packages:
+I'm going to load (and attach) the intoo, bivariate and MASS packages.
 <<>>=
+library (intoo)
 library (bivariate)
-library (moments)
+library (MASS)
 @
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Discrete Bivariate Uniform Distributions\\(and Core Functionality)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We can construct a discrete bivariate uniform probability mass function as the product of two discrete univariate uniform probability mass functions.
+Note that the bivariate package imports the intoo, barsurf, mvtnorm and KernSmooth packages.
 
-We can use the dubvpmf() function. It takes four arguments, the a and b values of X and the a and b values of Y.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Discrete Bivariate Uniform Distributions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can describe a bivariate uniform distribution as the product of two univariate uniform distributions.
+
+We can construct its probability mass function using the dubvpmf() function. It takes four arguments, the a and b values of X and the a and b values of Y.
 <<>>=
-f = dubvpmf (1, 10, 1, 10)
+f = dubvpmf (1, 4, 1, 4)
 @
 
-We can plot the probability mass function.
+We can print the function, however, I will give an example later.
+
+Also, we can plot it.
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f)
+plot (f, TRUE)
 @
 \end {center}
 
@@ -109,8 +126,8 @@ To construct a cumulative distribution function, we can use the dubvcdf() functi
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-F = dubvcdf (1, 10, 1, 10)
-plot (F)
+F = dubvcdf (1, 4, 1, 4)
+plot (F, TRUE)
 @
 \end {center}
 
@@ -120,27 +137,31 @@ In both cases, we can evaluate the function for x and y.
 f (1, 1)
 @
 
-The same applies to all the other probability distributions in this package, except for kernel distributions.
+The same applies to all the other probability distributions in this package, except for kernel density estimates.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate Binomial Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-One way to define a bivariate binomial distribution is to say that we have n trials. In each trial there are two independent events, each with a particular probability of success. Like flipping two coins, n times.
+One way to describe a bivariate binomial distribution is to say that we have n trials. In each trial there are two independent events, each with a particular probability of success. Like flipping two coins, n times.
 
-Like the discrete bivariate uniform probability mass function, we can construct a bivariate binomial probability mass function as the product of two univariate binomial probability mass functions, so:
+Like the bivariate uniform distribution, we can describe a bivariate binomial distribution as the product of two univariate binomial distributions with the same n parameter, so:
 \begin {align*}
-\mathbb {P} (X = x, Y = y) = f_{X,Y} (x, y) &= f_X (x) f_Y (y)\\
+\mathbb {P} (X = x, Y = y) &= f_{X,Y} (x, y; p_X, p_Y, n)\\
+&= f_X (x; p_X, n) f_Y (y; p_Y, n)\\
 &= \bigg[ \binom {n}{x}p_X^x(1 - p_X)^{n-x} \bigg] \bigg[ \binom {n}{y}p_Y^y(1 - p_Y)^{n-y} \bigg]
 \end{align*}
 
 Where $p_X$ is the probability of the first success and $p_Y$ is the probability of the second success.
 
-We can use the bnbvpmf() function. It takes three arguments, the number of trials and the probability of each success.
+We can construct its probability mass function using the bnbvpmf() function. It takes three arguments, the probability of the first success, the probability of the second success and the number of trials.
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-f = bnbvpmf (20, 0.5, 0.5)
+f = bnbvpmf (0.5, 0.5, 20)
 plot (f)
+@
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f, TRUE)
 @
 \end {center}
 
@@ -148,18 +169,23 @@ To construct a cumulative distribution function, we can use the bnbvcdf() functi
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-F = bnbvcdf (20, 0.5, 0.5)
-plot (F)
+F = bnbvcdf (0.5, 0.5, 20)
+plot (F, TRUE)
 @
 \end {center}
+
+Note that I've put the probabilities first, however, it's customary for the number of trials to be first.
+
+If n is omitted, it defaults to one, giving a Bernoulli distribution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate Poisson Distributions*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Based on Karlis and Ntzoufras (2003) we can define the bivariate Poisson probability mass function as:
-\begin {equation*}
-\mathbb {P} (X = x, Y = y)  = f_{X,Y} (x, y) = e^{-(\lambda_1 + \lambda_2 + \lambda_3)} \frac{\lambda_1^x}{x!} \frac{\lambda_2^y}{y!} \sum_k \binom {x}{k} \binom {y}{k} k! \bigg( \frac{\lambda_3}{\lambda_1 \lambda_2} \bigg)^k
-\end {equation*}
+Based on Karlis and Ntzoufras (2003), we can define the bivariate Poisson probability mass function as:
+\begin {align*}
+\mathbb {P} (X = x, Y = y) &= f_{X,Y} (x, y; \lambda_1, \lambda_2, \lambda_3)\\
+&= e^{-(\lambda_1 + \lambda_2 + \lambda_3)} \frac{\lambda_1^x}{x!} \frac{\lambda_2^y}{y!} \sum_k \binom {x}{k} \binom {y}{k} k! \bigg( \frac{\lambda_3}{\lambda_1 \lambda_2} \bigg)^k
+\end{align*}
 
 Where $k$ is in $0$ to $\text {min} (x, y)$.
 
@@ -168,25 +194,53 @@ $\mathbb {E}(X) = \text {var}(X) = \lambda_1 + \lambda_3$\\
 $\mathbb {E}(Y) = \text {var}(Y) = \lambda_2 + \lambda_3$\\
 $\text {cov}(X, Y) = \lambda_3$
 
-We can use the pbvpmf() function. It takes three arguments, the mean of X, the mean of Y and the covariance between X and Y.
+We can use the pbvpmf() or pbvpmf.2() functions.
+
+The first takes three arguments, the three $\lambda$ parameters. The second also takes three arguments, but the mean of X, the mean of Y and the covariance between X and Y.
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-f = pbvpmf (8, 8, 2)
+f = pbvpmf.2 (8, 8, 2)
 plot (f)
+@
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f, TRUE)
+@
+\end {center}
+
+To construct a cumulative distribution function, we can use the pbvcdf() or pbvcdf.2() functions. They take the same arguments as pbvpmf() and pbvpmf.2().
+
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+F = pbvcdf.2 (8, 8, 2)
+plot (F, TRUE)
 @
 \end {center}
 
 Note that $\lambda_1$ and $\lambda_2$ need to be greater than zero, which means that $\mathbb {E}(X)$ and $\mathbb {E}(Y)$ need to be greater than $\text {cov}(X, Y)$.
 
-To construct a cumulative distribution function, we can use the pbvcdf() function. It takes the same arguments as pbvpmf().
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Bivariate Categorical Distributions*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Bivariate categorical distributions are different to other probability distributions in this package. They are defined by a matrix of parameters (with either probabilities or frequencies), preferably with row and column names.
+<<>>=
+z = matrix (sample (1:16), 4, 4) / 136
+rownames (z) = colnames (z) = c ("A", "B", "C", "D")
+z
+@
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-F = pbvcdf (8, 8, 2)
-plot (F)
+f = cbvpmf (z)
+plot (f, TRUE)
 @
 \end {center}
+
+Evaluation can use either integers or strings, and returns probabilities.
+<<>>=
+f (1, 2)
+f ("A", "B")
+@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Continuous Bivariate Uniform Distributions}
@@ -197,11 +251,7 @@ We can use the cubvpdf() function. It takes four arguments, the a and b values o
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-f = cubvpdf (0, 1, 0, 1)
-plot (f)
-@
-
-<<fig=TRUE, width=4.75, height=3>>=
+f = cubvpdf (0, 2, 0, 2)
 plot (f, TRUE)
 @
 \end {center}
@@ -210,11 +260,6 @@ To construct a cumulative distribution function, we can use the cubvcdf() functi
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-F = cubvcdf (0, 1, 0, 1)
-plot (F)
-@
-
-<<fig=TRUE, width=4.75, height=3>>=
 plot (F, TRUE)
 @
 \end {center}
@@ -222,21 +267,20 @@ plot (F, TRUE)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate Normal Distributions*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Hothorn, Bretz, Genz, Mi and Miwa (2018) provide the mvtnorm package, which is imported and used by this package.
+We can construct a normal bivariate probability density function using the nbvpdf() or nbvpdf.2() functions, both of which use the dmvnorm() function from the mvtnorm package, and take five arguments.
 
-We can construct a normal bivariate probability density function using the nbvpdf() function. It takes five arguments, the mean of X, the mean of Y, the variance of X, the variance of Y and the covariance of X and Y.
+The first takes the mean of X, the mean of Y, the standard deviation of X, the standard deviation of Y and their correlation. The second takes the mean of X, the mean of Y, the variance of X, the variance of Y and their covariance.
 
 <<>>=
 f = nbvpdf (0, 0, 1, 1, 0)
 @
 
-Alternatively we could use the standard deviations and correlation, using something like:
-
+We can print the function.
 <<>>=
-#f = nbvpdf (mean.x, mean,y, sd.x ^ 2, sd.y ^ 2, sd.x * sd.y * cor.xy)
+f
 @
 
-Once we have constructed our object we can plot it.
+And plot it.
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
@@ -248,15 +292,9 @@ plot (f, TRUE)
 @
 \end {center}
 
-We can construct a cumulative distribution function using the nbvcdf() function. It takes the same arguments as nbvpdf().
-
+We can construct a cumulative distribution function using the nbvcdf() or nbvcdf.2() functions, both of which use the pmvnorm() function from the mvtnorm package, and take the same arguments as nbvpdf() and nbvpdf.2().
 <<>>=
 F = nbvcdf (0, 0, 1, 1, 0)
-@
-
-Alternatively we could use the standard deviations and correlation, using something like:
-<<>>=
-#F = nbvcdf (mean.x, mean,y, sd.x ^ 2, sd.y ^ 2, sd.x * sd.y * cor.xy)
 @
 
 Once we have constructed our object we can plot it.
@@ -271,50 +309,23 @@ plot (F, TRUE)
 @
 \end {center}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Comparing Normal Distributions}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We can compare different normal distributions using different covariance parameters.
-
-First, let's consider the bivariate distributions from the previous section with zero correlation/covariance.
-
-\begin {center}
-<<fig=TRUE, width=4.75, height=3>>=
-plot (f, all=TRUE)
-@
-\end {center}
-
-Note that this requires the probability density function rather than the cumulative distribution function.
-
-Second, let's consider bivariate distributions with positive correlation/covariance.
-
-\begin {center}
-<<fig=TRUE, width=4.75, height=3>>=
-f2 = nbvpdf (0, 0, 1, 1, 0.75)
-plot (f2, all=TRUE)
-@
-\end {center}
-
-Third, let's consider bivariate distributions with negative correlation/covariance.
-
-\begin {center}
-<<fig=TRUE, width=4.75, height=3>>=
-f3 = nbvpdf (0, 0, 1, 1, -0.75)
-plot (f3, all=TRUE)
-@
-\end {center}
+Note that there's an appendix later that compares normal distributions with different parameters.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate Bimodal Distributions*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-One way to construct a bivariate bimodal probability density function is to construct two bivariate normal probability density functions, then add them together and then divide by two. This can be generalized by allowing any two weights which sum to one.
+Here, a bimodal distribution isn't an officially recognized distribution, however, it's still of interest.
 
-We can construct such a probability density function using the bmbvpdf() function. It takes eight (or nine) arguments. The mean of X, the mean of Y, the variance of X and the variance of Y for the first component distribution. And the mean of X, the mean of Y, the variance of X and the variance of Y for the second component distribution. Optionally, we can provide another argument for the weight of the first component distribution in the interval (0, 1).
+One way to construct a bivariate bimodal probability density function is to construct two bivariate normal probability density functions, then add their densities together, and then divide by two.
+
+We can construct such a probability density function using the bmbvpdf() or bmbvpdf.2() functions, both of which take eight arguments.
+
+The first function takes the mean of X, the mean of Y, the standard deviation of X and the standard deviation of Y for the first component distribution, and the mean of X, the mean of Y, the standard deviation of X and the standard deviation of Y for the second component distribution. The second function is the same except we use variances instead of standard deviations.
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
 f = bmbvpdf (3.5, 0, 1, 1, 6.5, 0, 1, 1)
-plot (f)
+plot (f, npoints=40)
 @
 
 <<fig=TRUE, width=4.75, height=3>>=
@@ -322,12 +333,12 @@ plot (f, TRUE, npoints=40)
 @
 \end {center}
 
-We can construct a cumulative distribution function using the bmbvcdf() function. It takes the same arguments as bmbvpdf().
+We can construct a cumulative distribution function using the bmbvcdf() or bmbvcdf.2() functions. They take the same arguments as bmbvpdf() and bmbvpdf.2().
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
 F = bmbvcdf (3.5, 0, 1, 1, 6.5, 0, 1, 1)
-plot (F)
+plot (F, npoints=40)
 @
 
 <<fig=TRUE, width=4.75, height=3>>=
@@ -335,48 +346,46 @@ plot (F, TRUE, npoints=40)
 @
 \end {center}
 
+Note that this method is similar kernel smoothing, discussed later.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Comparing Bimodal Distributions}
+\section* {Trivariate Dirichlet Distributions*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We can compare different bimodal distributions using different covariance structures.
+Dirichlet distributions with three variables are similar to other probability distributions with two variables.
 
-First, let's consider the bimodal distributions from the previous section.
+We can construct one, using the dtvpdf() function, which takes three $\alpha$ parameters.
+
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f, npoints=20, all=TRUE)
+f = dtvpdf (2, 4, 6)
+plot (f)
+@
+
+<<fig=TRUE, width=4.75, height=3>>=
+plot (f, TRUE)
 @
 \end {center}
 
-Note that this requires the probability density function rather than the cumulative distribution function.
+Or using the log density.
 
-Second, let's consider bimodal distributions with a positive covariance structure.
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-f2 = bmbvpdf (3.5, 3.5, 1, 1, 6.5, 6.5, 1, 1)
-plot (f2, npoints=20, all=TRUE)
+plot (f, TRUE, log=TRUE)
 @
 \end {center}
 
-Third, let's consider bimodal distributions with a negative covariance structure.
-\begin {center}
-<<fig=TRUE, width=4.75, height=3>>=
-f3 = bmbvpdf (3.5, -3.5, 1, 1, 6.5, -6.5, 1, 1)
-plot (f3, npoints=20, all=TRUE)
-@
-\end {center}
+Note that Dirichlet distributes can take a large variety of shapes.
+
+I've provided some more examples in an appendix.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Bivariate Probability Distributions Resulting from Kernel Smoothing*}
+\section* {Bivariate Kernel Density Estimates*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Ripley and Wand (2015) provide the KernSmooth package.
+We can construct bivariate kernel density estimates using the kbvpdf() function, which uses the bkde2D() function from KernSmooth. It has four arguments. The first two arguments are x and y vectors of data. The second two arguments are the bandwidths.
 
-This package imports and uses the bkde2D() function from that package, which has it's own example. Note that I'm using the same bandwidth parameters and geyser data (from the MASS package) as it's example. Refer to Appendix 2 for more information on the geyser data.
-
-We can use the kbvpdf() function to produce bivariate kernel probability density functions. The first two arguments are x and y vectors of data. The second two arguments are the bandwidths.
-
+I've adapted the example from KernSmooth.
 <<>>=
-data ("geyser", package="MASS")
+data ("geyser")
 attach (geyser)
 @
 
@@ -387,7 +396,6 @@ f = kbvpdf (duration, waiting, 0.7, 7)
 Again, once we have constructed our object we can plot it.
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-
 plot (f, xlab="duration", ylab="waiting")
 @
 
@@ -396,67 +404,128 @@ plot (f, TRUE, xlab="duration", ylab="waiting")
 @
 \end {center}
 
-We can use the kbvcdf() function to produce bivariate kernel cumulative distribution functions.
+<<>>=
+detach (geyser)
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Bivariate Empirical Cumulative Distribution Functions*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Bivariate ECDFs are constructed in a similar way to bivariate kernel density estimates, except they give us a CDF rather than a PDF.
+
+<<>>=
+x = rnorm (20)
+y = rnorm (20)
+@
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-F = kbvcdf (duration, waiting, 0.7, 7)
-plot (F, xlab="duration", ylab="waiting")
+F = ebvcdf (x, y)
+plot (F)
 @
 
 <<fig=TRUE, width=4.75, height=3>>=
-plot (F, TRUE, xlab="duration", ylab="waiting")
+plot (F, TRUE)
 @
 \end {center}
 
-Reiterating, we can't evaluate these functions. Refer to the empirical package to evaluate a bivariate PDF or CDF resulting from bivariate kernel smoothing.
+Note that if the number of observations is small, the function is plotted as a step function, evaluated over the observations, with an extrapolated region. However, if the number of observations is large, the function is plotted as a (continuous) surface, evaluated over a regularly spaced grid.
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {References}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Spurdle, A. (2018). barsurf: Minimal Bar Plots and Surface Plots in 3D.
+\subsection* {R Packages}
+
+Spurdle, A. (2019). intoo: Object Oriented Extensions.
+
+Spurdle, A. (2019). barsurf: Bar, Surface and Related Plots.
 
 Hothorn, T., Bretz, F., Genz, A., Mi, X. \& Miwa, T. (2018). mvtnorm: Multivariate Normal and t Distributions.
 
 Ripley, B. \& Wand, M. (2015). KernSmooth: Functions for Kernel Smoothing Supporting Wand \& Jones (1995).
 
-Komsta, L. \& Novomestky, F. (2015). moments: Moments, cumulants, skewness, kurtosis and related tests.
+Spurdle, A. (2019). probhat: Generalized Kernel Smoothing.
 
 Ripley, B. (2018). MASS: Support Functions and Datasets for Venables and Ripley's MASS.
+
+\subsection* {Journal Articles}
 
 Karlis, D. \& Ntzoufras, I. (2003). Analysis of sports data by using bivariate Poisson models.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Appendix 1\\Computing Bivariate Probabilities}
+\section* {Appendix A:\\Comparing Normal Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can compare different normal distributions using different correlation or covariance parameters.
 
-We can compute the probability that two discrete random variables, $X$ and $Y$, are between two pairs of values, ($x_1$ and $x_2$) and ($y_1$ and $y_2$), using the following expression:
-\begin {equation*}
-\mathbb {P} (x_1 \leq X \leq x_2, y_1 \leq Y \leq y_2)  = F (x_2, y_2) - [F (x_1 - 1, y_2) + F (x_2, y_1 - 1)] + F (x_1 - 1, y_1 - 1)
-\end {equation*}
+First, let's consider the bivariate distributions from the earlier section with zero correlation.
 
-And we can compute the probability that two continuous random variables, $X$ and $Y$, are between two pairs of values, ($x_1$ and $x_2$) and ($y_1$ and $y_2$), using the following expression:
-\begin {equation*}
-\mathbb {P} (x_1 \leq X \leq x_2, y_1 \leq Y \leq y_2)  = F (x_2, y_2) - [F (x_1, y_2) + F (x_2, y_1)] + F (x_1, y_1)
-\end {equation*}
-
-Note that these aren't necessarily the most efficient ways of doing it.
-
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Appendix 2\\geyser Data (from the MASS Package)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin {center}
-<<fig=TRUE, width=4.75, height=3>>=
-head (geyser, 3)
-tail (geyser, 3)
-summary (geyser)
-skewness (geyser)
-cov (geyser)
-plot (duration, waiting)
+<<>>=
+f1 = nbvpdf (0, 0, 1, 1, 0)
+f1 %$% matrix.variances
+@
+
+<<fig=TRUE, width=4.75, height=4>>=
+plot (f1, all=TRUE)
 @
 \end {center}
 
-\end{document}
+Second, let's consider bivariate distributions with positive correlation.
+
+\begin {center}
+<<>>=
+f2 = nbvpdf (0, 0, 1, 1, 0.75)
+f2 %$% matrix.variances
+@
+
+<<fig=TRUE, width=4.75, height=4>>=
+plot (f2, all=TRUE)
+@
+\end {center}
+
+Third, let's consider bivariate distributions with negative correlation.
+
+\begin {center}
+<<>>=
+f3 = nbvpdf (0, 0, 1, 1, -0.75)
+f3 %$% matrix.variances
+@
+
+<<fig=TRUE, width=4.75, height=4>>=
+plot (f3, all=TRUE)
+@
+\end {center}
+
+Note that currently, the all=TRUE option requires the PMF or PDF rather than the CDF.
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section* {Appendix B:\\Comparing Dirichlet Distributions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$\boldsymbol \alpha = (1, 1, 1)$
+
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (dtvpdf (1, 1, 1), TRUE)
+@
+\end {center}
+
+$\boldsymbol \alpha = (2, 2, 2)$
+
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (dtvpdf (2, 2, 2), TRUE)
+@
+\end {center}
+
+$\boldsymbol \alpha = (0.5, 0.5, 0.5)$
+
+\begin {center}
+<<fig=TRUE, width=4.75, height=3>>=
+plot (dtvpdf (0.5, 0.5, 0.5), TRUE)
+@
+\end {center}
+
+\end {document}

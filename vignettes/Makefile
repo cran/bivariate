@@ -1,11 +1,11 @@
 default:
 	make bivariate.pdf
-	make removeother
+	make remove_other
 
 bivariate.pdf: bivariate.tex
 	pdflatex bivariate.tex
 
-removeother:
+remove_other:
 	rm -f *.tex
 	rm -f *.aux
 	rm -f *.log

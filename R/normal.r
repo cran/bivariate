@@ -1,39 +1,44 @@
-nbvpdf = function (mean.X, mean.Y, variance.X, variance.Y, covariance)
-{   nbvpdf.f = function (x, y)
-	{	x = as.numeric (x)
-		y = as.numeric (y)
-		stopifnot (length (x) == length (y) )
-		.nbvpdf.eval (x, y)
+nbvpdf = function (mean.X, mean.Y, sd.X, sd.Y, cor)
+	nbvpdf.2 (mean.X, mean.Y, sd.X ^ 2, sd.Y ^ 2, sd.X * sd.Y * cor)
+
+nbvpdf.2 = function (mean.X, mean.Y, var.X, var.Y, cov)
+{   f = function (x, y)
+	{	. = THAT ()
+		v = .val.numeric.args (x, y)
+		.nbvpdf.eval (., v$x, v$y)
 	}
+
 	vector.means = c (mean.X, mean.Y)
-    matrix.variances = c (variance.X, covariance, covariance, variance.Y)
+    matrix.variances = c (var.X, cov, cov, var.Y)
     matrix.variances = matrix (matrix.variances, nrow=2, ncol=2)
-    attributes (nbvpdf.f) = list (class="nbvpdf", vector.means=vector.means, matrix.variances=matrix.variances)
-    nbvpdf.f
+
+	f = .bv (f)
+    EXTEND (f, "nbvpdf", vector.means, matrix.variances)
 }
 
-.nbvpdf.eval = function (x, y)
-{   . = attributes (sys.function (-1) )
-    dmvnorm (cbind (x, y), .$vector.means, .$matrix.variances)
-}
+.nbvpdf.eval = function (., x, y)
+	dmvnorm (cbind (x, y), .$vector.means, .$matrix.variances)
 
-nbvcdf = function (mean.X, mean.Y, variance.X, variance.Y, covariance)
-{   nbvcdf.f = function (x, y)
-	{	x = as.numeric (x)
-		y = as.numeric (y)
-		stopifnot (length (x) == length (y) )
-		.nbvcdf.eval (x, y)
+nbvcdf = function (mean.X, mean.Y, sd.X, sd.Y, cor)
+	nbvcdf.2 (mean.X, mean.Y, sd.X ^ 2, sd.Y ^ 2, sd.X * sd.Y * cor)	
+
+nbvcdf.2 = function (mean.X, mean.Y, var.X, var.Y, cov)
+{   f = function (x, y)
+	{	. = THAT ()
+		v = .val.numeric.args (x, y)
+		.nbvcdf.eval (., v$x, v$y)
 	}
+
 	vector.means = c (mean.X, mean.Y)
-    matrix.variances = c (variance.X, covariance, covariance, variance.Y)
+    matrix.variances = c (var.X, cov, cov, var.Y)
     matrix.variances = matrix (matrix.variances, nrow=2, ncol=2)
-    attributes (nbvcdf.f) = list (class="nbvcdf", vector.means=vector.means, matrix.variances=matrix.variances)
-    nbvcdf.f
+
+	f = .bv (f)
+    EXTEND (f, "nbvcdf", vector.means, matrix.variances)
 }
 
-.nbvcdf.eval = function (x, y)
-{   . = attributes (sys.function (-1) )
-	n = length (x)
+.nbvcdf.eval = function (., x, y)
+{   n = length (x)
     xy = cbind (x, y)
     z = numeric (n)
     for (i in 1:n)
@@ -41,39 +46,24 @@ nbvcdf = function (mean.X, mean.Y, variance.X, variance.Y, covariance)
     z
 }
 
+.plot.nbv = function (f, use.plot3d, npoints, xlim, ylim, ..., is.cdf=FALSE)
+{   . = attributes (f)
+	if (missing (xlim) )
+		xlim = .$vector.means [1] + c (-3, 3) * sqrt (.$matrix.variances [1, 1])
+	if (missing (ylim) )
+		ylim = .$vector.means [2] + c (-3, 3) * sqrt (.$matrix.variances [2, 2])
+	v = .continuous.outer (f, xlim, ylim, npoints)
+	.plot.bv.2 (TRUE, use.plot3d, is.cdf, v$x, v$y, v$z, ...)
+}
+
 plot.nbvpdf = function (x, use.plot3d=FALSE, npoints=20, xlim, ylim, ..., all=FALSE)
-{   nbvpdf.f = x
-    
-    . = attributes (nbvpdf.f)
-    if (all)
-    {   par (mfrow=c (2, 2) )
-        p0 = par (mar=c (2, 2.5, 1, 0.175) )
-        nbvcdf.f = nbvcdf (0, 0, 1, 1, 0)
-        attributes (nbvcdf.f)$vector.means = .$vector.means
-        attributes (nbvcdf.f)$matrix.variances = .$matrix.variances
-        plot (nbvpdf.f, FALSE, xlab="", ylab="", npoints, xlim, ylim, drawlabels=FALSE)
-        plot (nbvpdf.f, TRUE, npoints, xlim, ylim, ...)
-        plot (nbvcdf.f, FALSE, xlab="", ylab="", npoints, xlim, ylim, drawlabels=FALSE)
-        plot (nbvcdf.f, TRUE, npoints, xlim, ylim, ...)
-        par (p0)
-    }
-    else
-    {   if (missing (xlim) )
-            xlim = .$vector.means [1] + c (-3, 3) * .$matrix.variances [1, 1]
-        if (missing (ylim) )
-            ylim = .$vector.means [2] + c (-3, 3) * .$matrix.variances [2, 2]
-        x = seq (xlim [1], xlim [2], length.out=npoints)
-        y = seq (ylim [1], ylim [2], length.out=npoints)
-        z = outer (x, y, nbvpdf.f)
-        if (use.plot3d)
-            plot3d.surf (,,z, ...)
-        else
-        {   p0 = par (pty="s")
-            .contour (x, y, z, ...)
-            par (p0)
-        }
-    }
+{  	if (all)
+	{	F = nbvcdf (0, 0, 0, 0, 0)
+		.plot.bv.all (x, F, npoints, xlim, ylim, ...)
+	}
+	else
+		.plot.nbv (x, use.plot3d, npoints, xlim, ylim, ...)
 }
 
 plot.nbvcdf = function (x, use.plot3d=FALSE, npoints=20, xlim, ylim, ...)
-      plot.nbvpdf (x, use.plot3d, npoints, xlim, ylim, ...)
+	.plot.nbv (x, use.plot3d, npoints, xlim, ylim, ..., is.cdf=TRUE)
