@@ -1,18 +1,31 @@
+#bivariate: Bivariate Probability Distributions
+#Copyright (C), Abby Spurdle, 2020
+
+#This program is distributed without any warranty.
+
+#This program is free software.
+#You can modify it and/or redistribute it, under the terms of:
+#The GNU General Public License, version 2, or (at your option) any later version.
+
+#You should have received a copy of this license, with R.
+#Also, this license should be available at:
+#https://cran.r-project.org/web/licenses/GPL-2
+
 .compute.constant = function (alpha)
 	1 / (prod (gamma (alpha) ) / gamma (sum (alpha) ) )
 
-dtvpdf = function (alpha.1, alpha.2, alpha.3, tol=0.001)
-{   f = function (x1, x2, x3, log=FALSE)
+dtvpdf = function (alpha.X, alpha.Y, alpha.Z)
+{	f = function (x, y, z, log=FALSE)
 	{	. = THAT ()
-		x = .val.dirichlet.args (x1, x2, x3, .$tol)
-		.dtvpdf.eval (., x, log)
+		v = .val.dirichlet.args (x, y, z, 0.001)
+		.dtvpdf.eval (., v, log)
 	}
-	alpha = .val.dirichlet.pars (alpha.1, alpha.2, alpha.3)
+	alpha = .val.dirichlet.pars (alpha.X, alpha.Y, alpha.Z)
 
 	f = .bv (f)
 	EXTEND (f, "dtvpdf",
 		.constant = .compute.constant (alpha),
-		alpha, tol
+		alpha
 	)
 }
 
@@ -24,17 +37,14 @@ dtvpdf = function (alpha.1, alpha.2, alpha.3, tol=0.001)
 		d
 }
 
-plot.dtvpdf = function (x, use.plot3d=FALSE, npoints=20, log=FALSE, ...)
-	.plot.dtvpdf.2 (x, use.plot3d, npoints, log, ...)
-
-.plot.dtvpdf.2 = function (x, use.plot3d, npoints, log, xlab="x1", ylab="x2", contrast=-0.8, ...)
+plot.dtvpdf = function (x, plot.3d=FALSE, ..., n=30, log=FALSE)
 {	f = x
 
 	. = attributes (f)
-	x = y = seq (0, 1, length.out=npoints)
-	z = matrix (NA, npoints, npoints)
-	for (i in 1:npoints)
-		for (j in 1:(1 + npoints - i) )
+	x = y = seq (0, 1, length.out=n)
+	z = matrix (NA, n, n)
+	for (i in 1:n)
+		for (j in 1:(1 + n - i) )
 		{	v = .dirichlet.scale (x [i], y [j])
 			z [i, j] = f (v [1], v [2], v [3], log)
 		}
@@ -44,10 +54,10 @@ plot.dtvpdf = function (x, use.plot3d=FALSE, npoints=20, log=FALSE, ...)
 		zlim = range (z, na.rm=TRUE)
 	else 
 		zlim = .inzm (z)
-	if (use.plot3d)
-		plot3d.trisurface (,,z, xlab=xlab, ylab=ylab, zlim=zlim, contrast=contrast, ...)
+	if (plot.3d)
+		plot_trisurface (,,z, ..., zlim=zlim)
 	else
-		plot2d.tricontour (x, y, z, xlab=xlab, ylab=ylab, contrast=contrast, ...)
+		plot_tricontour (,,z, ...)
 }
 
 .dirichlet.scale = function (x1, x2, crop=0.02)

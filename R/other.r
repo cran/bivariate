@@ -1,3 +1,22 @@
+#bivariate: Bivariate Probability Distributions
+#Copyright (C), Abby Spurdle, 2020
+
+#This program is distributed without any warranty.
+
+#This program is free software.
+#You can modify it and/or redistribute it, under the terms of:
+#The GNU General Public License, version 2, or (at your option) any later version.
+
+#You should have received a copy of this license, with R.
+#Also, this license should be available at:
+#https://cran.r-project.org/web/licenses/GPL-2
+
+.bv = function (f)
+	EXTEND (f, "bv")
+
+print.bv = function (x, ...)
+	object.summary (x, ...)
+
 .p2c = function (f, F)
 {	class.name = class (F)
 	attributes (F) = attributes (f)
@@ -13,27 +32,24 @@
 	alpha
 }
 
-.plot.bv = function (is.continuous, use.plot3d, in.zero.one, x, y, z, ..., contours=TRUE, contrast=0)
-{	if (in.zero.one)
-		zlim = c (0, 1)
-	else
-		zlim = .inzm (z)
-	if (is.continuous)
-	{	if (use.plot3d)
-			plot3d.surface (,,z, zlim=zlim, ...)
+.plot.bv = function (is.continuous, plot.3d, in.zero.one, x, y, z, ..., zlim)
+{	if (plot.3d)
+	{	if (missing (zlim) )
+		{	if (in.zero.one)
+				zlim = c (0, 1)
+			else
+				zlim = .inzm (z)
+		}
+		if (is.continuous)
+			plot_surface (x, y, z, ..., zlim=zlim)
 		else
-			plot2d.contour (x, y, z, contours=contours, contrast=contrast, ...)
+			plot_bar (x, y, z, ..., zlim=zlim)
 	}
+	else if (is.continuous)
+		plot_cfield (x, y, z, ...)
 	else
-	{	if (use.plot3d)
-			plot3d.bar (,,z, zlim=zlim, ...)
-		else
-			plot2d.cell (,,z, xlabs=x, ylabs=y, contrast=contrast, ...)
-	}
+		plot_dfield (x, y, z, ...)
 }
-
-.plot.bv.2 = function (is.continuous, use.plot3d, in.zero.one, x, y, z, ..., contours=TRUE, contrast=-0.8)
-	.plot.bv (is.continuous, use.plot3d, in.zero.one, x, y, z, ..., contours=contours, contrast=contrast)
 
 .plot.bv.all = function (f, F.default, ..., cex=0.65)
 {	mar.2d = c (3.25, 3.75, 2.75, 3.75)
@@ -61,11 +77,11 @@
 
 .val.categorical.args = function (., x, y)
 {	if (is.character (x) )
-		x = match (x, .$x.values)
+		x = match (x, .$xvalues)
 	else
 		x = as.integer (x)
 	if (is.character (y) )
-		y = match (y, .$y.values)
+		y = match (y, .$yvalues)
 	else
 		y = as.integer (y)
 	.val.args (x, y)
@@ -77,21 +93,31 @@
 	.val.args (x, y)
 }
 
+.val.tv.numeric.args = function (x, y, z)
+{	x = as.numeric (x)
+	y = as.numeric (y)
+	z = as.numeric (z)
+	if (length (z) == 1 && length (x) > 1)
+		z = rep (z, length (x) )
+	stopifnot (length (x) == length (y) && length (x) == length (z) )
+	LIST (x, y, z)
+}
+
 .val.dirichlet.args = function (x1, x2, x3, tol)
 {	x1 = as.numeric (x1)
 	x2 = as.numeric (x2)
 	x3 = as.numeric (x3)
 	equal = (length (x1) == c (length (x2), length (x3) ) )
-	if (!all (equal) )
-		stop ("length() of x1, x2 and x3 must be equal")
+	if (! all (equal) )
+		stop ("length of x, y and z must be equal")
 	x1.in = all (x1 > 0 && x1 < 1)
 	x2.in = all (x2 > 0 && x2 < 1)
 	x3.in = all (x3 > 0 && x3 < 1)
 	if (! (x1.in && x2.in && x3.in) )
-		stop ("x1, x2 and x3 must be in interval (0, 1)")
+		stop ("x, y and z must be in interval (0, 1)")
 	xerr = abs (1 - (x1 + x2 + x3) )
 	if (any (xerr > tol ) )
-		stop ("x1 + x2 + x3 != 1")
+		stop ("x + y + z != 1")
 	cbind (x1, x2, x3)
 }
 

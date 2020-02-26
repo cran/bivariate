@@ -1,3 +1,16 @@
+#bivariate: Bivariate Probability Distributions
+#Copyright (C), Abby Spurdle, 2020
+
+#This program is distributed without any warranty.
+
+#This program is free software.
+#You can modify it and/or redistribute it, under the terms of:
+#The GNU General Public License, version 2, or (at your option) any later version.
+
+#You should have received a copy of this license, with R.
+#Also, this license should be available at:
+#https://cran.r-project.org/web/licenses/GPL-2
+
 bmbvpdf = function (mean.X1, mean.Y1, sd.X1, sd.Y1, mean.X2, mean.Y2, sd.X2, sd.Y2)
 	bmbvpdf.2 (mean.X1, mean.Y1, sd.X1 ^ 2, sd.Y1 ^ 2, mean.X2, mean.Y2, sd.X2 ^ 2, sd.Y2 ^ 2)
 
@@ -60,30 +73,30 @@ bmbvcdf.2 = function (mean.X1, mean.Y1, var.X1, var.Y1, mean.X2, mean.Y2, var.X2
     (f1 + f2) / 2
 }
 
-.plot.bmbv = function (f, use.plot3d, npoints, xlim, ylim, ..., is.cdf=FALSE)
-{   . = attributes (f)
+.plot.bmbv = function (f, plot.3d, xlim, ylim, n, ..., is.cdf=FALSE)
+{	. = attributes (f)
 	if (missing (xlim) )
-	{   xlim1 = .$vector.1.means [1] + c (-3, 3) * sqrt (.$matrix.1.variances [1, 1])
+	{	xlim1 = .$vector.1.means [1] + c (-3, 3) * sqrt (.$matrix.1.variances [1, 1])
 		xlim2 = .$vector.2.means [1] + c (-3, 3) * sqrt (.$matrix.2.variances [1, 1])
 		xlim = range (c (xlim1, xlim2) )
 	}
 	if (missing (ylim) )
-	{   ylim1 = .$vector.1.means [2] + c (-3, 3) * sqrt (.$matrix.1.variances [2, 2])
+	{	ylim1 = .$vector.1.means [2] + c (-3, 3) * sqrt (.$matrix.1.variances [2, 2])
 		ylim2 = .$vector.2.means [2] + c (-3, 3) * sqrt (.$matrix.2.variances [2, 2])
-		ylim = range (c (ylim1, ylim2) )	
+		ylim = range (c (ylim1, ylim2) )
 	}
-	v = .continuous.outer (f, xlim, ylim, npoints)
-	.plot.bv.2 (TRUE, use.plot3d, is.cdf, v$x, v$y, v$z, ...)
+	v = .continuous.outer (f, xlim, ylim, n)
+	.plot.bv (TRUE, plot.3d, is.cdf, v$x, v$y, v$z, ...)
 }
 
-plot.bmbvpdf = function (x, use.plot3d=FALSE, npoints=20, xlim, ylim, ..., all=FALSE)
-{   if (all)
-    {	F = bmbvcdf (0, 0, 0, 0, 0, 0, 0, 0)
-		.plot.bv.all (x, F, npoints=30, xlim, ylim, ...)
+plot.bmbvpdf = function (x, plot.3d=FALSE, ..., xlim, ylim, n=40, all=FALSE)
+{	if (all)
+	{	F = bmbvcdf (0, 0, 0, 0, 0, 0, 0, 0)
+		.plot.bv.all (x, F, ..., xlim=xlim, ylim=ylim, n=n)
 	}
-    else
-		.plot.bmbv (x, use.plot3d, npoints, xlim, ylim, ...)
+	else
+		.plot.bmbv (x, plot.3d, xlim, ylim, n, ...)
 }
 
-plot.bmbvcdf = function (x, use.plot3d=FALSE, npoints=20, xlim, ylim, ...)
-      .plot.bmbv (x, use.plot3d, npoints, xlim, ylim, ..., is.cdf=TRUE)
+plot.bmbvcdf = function (x, plot.3d=FALSE, ..., xlim, ylim, n=40)
+      .plot.bmbv (x, plot.3d, xlim, ylim, n, ..., is.cdf=TRUE)
