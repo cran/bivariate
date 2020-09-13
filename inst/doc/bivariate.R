@@ -11,56 +11,59 @@ set.seed (1)
 
 
 ###################################################
-### code chunk number 2: bivariate.Rnw:98-102
+### code chunk number 2: bivariate.Rnw:101-104
 ###################################################
 library (intoo)
 library (barsurf)
 library (bivariate)
-library (MASS)
 
 
 ###################################################
-### code chunk number 3: bivariate.Rnw:109-110
+### code chunk number 3: bivariate.Rnw:114-115
 ###################################################
-set.bs.options (rendering.style="e")
+set.bs.options (nhl=0, ref.arrows=FALSE, rendering.style="pdf")
 
 
 ###################################################
-### code chunk number 4: bivariate.Rnw:118-119
+### code chunk number 4: bivariate.Rnw:123-124
 ###################################################
 set.bs.theme ("gold")
 
 
 ###################################################
-### code chunk number 5: bivariate.Rnw:137-139
+### code chunk number 5: bivariate.Rnw:142-148
 ###################################################
-f <- dubvpmf (1, 1, 6, 6)
-F <- dubvcdf (1, 1, 6, 6)
+f <- dubvpmf (
+    1, 6, #first variable
+    1, 6) #second variable
+F <- dubvcdf (
+    1, 6,
+    1, 6)
 
 
 ###################################################
-### code chunk number 6: bivariate.Rnw:145-146
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
-
-
-###################################################
-### code chunk number 7: bivariate.Rnw:148-149
+### code chunk number 6: bivariate.Rnw:154-155
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE)
+plot (f)
 
 
 ###################################################
-### code chunk number 8: bivariate.Rnw:158-160
+### code chunk number 7: bivariate.Rnw:157-158
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (F)
+
+
+###################################################
+### code chunk number 8: bivariate.Rnw:166-168
 ###################################################
 f (2, 4)
 F (2, 4)
 
 
 ###################################################
-### code chunk number 9: bivariate.Rnw:168-172
+### code chunk number 9: bivariate.Rnw:176-180
 ###################################################
 d.unif.pmf.eval <- function (x, a, b)    #x ignored
     1 / (b - a + 1)
@@ -69,376 +72,382 @@ d.unif.cdf.eval <- function (x, a, b)    #x used
 
 
 ###################################################
-### code chunk number 10: bivariate.Rnw:175-177
+### code chunk number 10: bivariate.Rnw:183-185
 ###################################################
 d.unif.pmf.eval (2, 1, 6) * d.unif.pmf.eval (4, 1, 6)
 d.unif.cdf.eval (2, 1, 6) * d.unif.cdf.eval (4, 1, 6)
 
 
 ###################################################
-### code chunk number 11: bivariate.Rnw:201-203
+### code chunk number 11: bivariate.Rnw:209-211
 ###################################################
-f <- bnbvpmf (0.5, 0.25, 10)
-F <- bnbvcdf (0.5, 0.25, 10)
+f <- bnbvpmf (0.5, 0.5, 10)
+F <- bnbvcdf (0.5, 0.5, 10)
 
 
 ###################################################
-### code chunk number 12: bivariate.Rnw:210-211
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
-
-
-###################################################
-### code chunk number 13: bivariate.Rnw:213-214
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE)
-
-
-###################################################
-### code chunk number 14: bivariate.Rnw:225-226
-###################################################
-set.bs.theme ("blue")
-
-
-###################################################
-### code chunk number 15: bivariate.Rnw:253-255
-###################################################
-f <- pbvpmf.2 (8, 8, 2)
-F <- pbvcdf.2 (8, 8, 2)
-
-
-###################################################
-### code chunk number 16: bivariate.Rnw:261-262
+### code chunk number 12: bivariate.Rnw:217-218
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f)
 
 
 ###################################################
-### code chunk number 17: bivariate.Rnw:264-265
+### code chunk number 13: bivariate.Rnw:220-221
+###################################################
+set.bs.options (nhl=0, ref.arrows=FALSE, rendering.style="pdf", main="gpd.litmus.fit")
+
+
+###################################################
+### code chunk number 14: bivariate.Rnw:223-224
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
+plot (f, FALSE)
 
 
 ###################################################
-### code chunk number 18: bivariate.Rnw:267-268
+### code chunk number 15: bivariate.Rnw:226-227
+###################################################
+set.bs.theme ("gold")
+
+
+###################################################
+### code chunk number 16: bivariate.Rnw:233-234
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (F)
 
 
 ###################################################
-### code chunk number 19: bivariate.Rnw:274-275
+### code chunk number 17: bivariate.Rnw:245-246
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE)
+set.bs.theme ("blue")
 
 
 ###################################################
-### code chunk number 20: bivariate.Rnw:289-293
+### code chunk number 18: bivariate.Rnw:271-272
 ###################################################
-h <- sample (1:24)
-h <- matrix (h, 6, 4)
-rownames (h) <- LETTERS [1:6]
-colnames (h) <- letters [1:4]
+f <- pbvpmf.2 (8, 8, 2)
 
 
 ###################################################
-### code chunk number 21: bivariate.Rnw:296-297
-###################################################
-h
-
-
-###################################################
-### code chunk number 22: bivariate.Rnw:300-301
-###################################################
-f <- cbvpmf (h)
-
-
-###################################################
-### code chunk number 23: bivariate.Rnw:308-309
+### code chunk number 19: bivariate.Rnw:278-279
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f)
 
 
 ###################################################
-### code chunk number 24: bivariate.Rnw:311-313
+### code chunk number 20: bivariate.Rnw:281-282
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE,
-    arrows=FALSE)
+plot (f, FALSE)
 
 
 ###################################################
-### code chunk number 25: bivariate.Rnw:319-321
+### code chunk number 21: bivariate.Rnw:296-299
+###################################################
+h <- matrix (sample (1:24), 4, 6)
+rownames (h) <- LETTERS [1:4]
+colnames (h) <- letters [1:6]
+
+
+###################################################
+### code chunk number 22: bivariate.Rnw:302-303
+###################################################
+h
+
+
+###################################################
+### code chunk number 23: bivariate.Rnw:306-307
+###################################################
+f <- gbvpmf (h)
+
+
+###################################################
+### code chunk number 24: bivariate.Rnw:313-314 (eval = FALSE)
+###################################################
+## plot (f, FALSE)
+
+
+###################################################
+### code chunk number 25: bivariate.Rnw:316-319
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+p0 <- matrix.margins ()
+plot (f, FALSE)
+par (p0)
+
+
+###################################################
+### code chunk number 26: bivariate.Rnw:321-322
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (f)
+
+
+###################################################
+### code chunk number 27: bivariate.Rnw:330-331
+###################################################
+h [2, 4] / sum (h)
+
+
+###################################################
+### code chunk number 28: bivariate.Rnw:334-336
 ###################################################
 f (2, 4)
 f ("B", "d")
 
 
 ###################################################
-### code chunk number 26: bivariate.Rnw:327-328
+### code chunk number 29: bivariate.Rnw:344-345
 ###################################################
 set.bs.theme ("gold")
 
 
 ###################################################
-### code chunk number 27: bivariate.Rnw:338-340
+### code chunk number 30: bivariate.Rnw:355-361
 ###################################################
-f <- cubvpdf (0, 0, 2, 2)
-F <- cubvcdf (0, 0, 2, 2)
+f <- cubvpdf (
+    0, 2, #first variable
+    0, 2) #second variable
+F <- cubvcdf (
+    0, 2,
+    0, 2)
 
 
 ###################################################
-### code chunk number 28: bivariate.Rnw:346-347
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
-
-
-###################################################
-### code chunk number 29: bivariate.Rnw:353-354
+### code chunk number 31: bivariate.Rnw:367-368
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE)
+plot (f)
 
 
 ###################################################
-### code chunk number 30: bivariate.Rnw:363-364
+### code chunk number 32: bivariate.Rnw:370-371
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (F)
+
+
+###################################################
+### code chunk number 33: bivariate.Rnw:378-379
 ###################################################
 set.bs.theme ("blue")
 
 
 ###################################################
-### code chunk number 31: bivariate.Rnw:376-378
+### code chunk number 34: bivariate.Rnw:391-393
 ###################################################
 f <- nbvpdf (0, 0, 1, 1, 0)
 F <- nbvcdf (0, 0, 1, 1, 0)
 
 
 ###################################################
-### code chunk number 32: bivariate.Rnw:385-386
+### code chunk number 35: bivariate.Rnw:400-401
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f)
 
 
 ###################################################
-### code chunk number 33: bivariate.Rnw:388-389
+### code chunk number 36: bivariate.Rnw:403-404
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
+plot (f, FALSE)
 
 
 ###################################################
-### code chunk number 34: bivariate.Rnw:395-396
+### code chunk number 37: bivariate.Rnw:410-411
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (F)
 
 
 ###################################################
-### code chunk number 35: bivariate.Rnw:398-399
+### code chunk number 38: bivariate.Rnw:413-414
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE)
+plot (F, FALSE)
 
 
 ###################################################
-### code chunk number 36: bivariate.Rnw:415-421
+### code chunk number 39: bivariate.Rnw:430-433
 ###################################################
 f <- bmbvpdf (
     3.5, 0, 1, 1,    #first component distribution
     6.5, 0, 1, 1)    #second component distribution
-F <- bmbvcdf (
-    3.5, 0, 1, 1,    #first component distribution
-    6.5, 0, 1, 1)    #second component distribution
 
 
 ###################################################
-### code chunk number 37: bivariate.Rnw:427-428
+### code chunk number 40: bivariate.Rnw:439-441
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (f)
+plot (f,
+    axes = c (TRUE, FALSE), xat = c (3.5, 6.5) )
 
 
 ###################################################
-### code chunk number 38: bivariate.Rnw:434-436
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE,
-    arrows = c (FALSE, TRUE), xat = c (3.5, 6.5) )
-
-
-###################################################
-### code chunk number 39: bivariate.Rnw:438-439
+### code chunk number 41: bivariate.Rnw:443-445
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (F)
+plot (f, FALSE,
+    axes = c (TRUE, FALSE), xat = c (3.5, 6.5) )
 
 
 ###################################################
-### code chunk number 40: bivariate.Rnw:445-447
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (F, TRUE,
-    arrows = c (FALSE, TRUE), xat = c (3.5, 6.5) )
-
-
-###################################################
-### code chunk number 41: bivariate.Rnw:464-465
+### code chunk number 42: bivariate.Rnw:462-463
 ###################################################
 f <- dtvpdf (2, 4, 6)
 
 
 ###################################################
-### code chunk number 42: bivariate.Rnw:472-473
+### code chunk number 43: bivariate.Rnw:469-470
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f)
 
 
 ###################################################
-### code chunk number 43: bivariate.Rnw:475-476
+### code chunk number 44: bivariate.Rnw:472-473
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE)
+plot (f, FALSE)
 
 
 ###################################################
-### code chunk number 44: bivariate.Rnw:484-485
+### code chunk number 45: bivariate.Rnw:491-492
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (f, TRUE, log=TRUE)
+data ("geyser", package="MASS")
 
 
 ###################################################
-### code chunk number 45: bivariate.Rnw:505-507
+### code chunk number 46: bivariate.Rnw:495-498
 ###################################################
-data ("geyser")
 attach (geyser)
-
-
-###################################################
-### code chunk number 46: bivariate.Rnw:510-511
-###################################################
 fh <- kbvpdf (duration, waiting, 0.7, 7)
-
-
-###################################################
-### code chunk number 47: bivariate.Rnw:518-520
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (fh,
-    xlab="duration", ylab="waiting")
-
-
-###################################################
-### code chunk number 48: bivariate.Rnw:523-525
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (fh, TRUE,
-    xlab="duration", ylab="waiting")
-
-
-###################################################
-### code chunk number 49: bivariate.Rnw:529-530
-###################################################
 detach (geyser)
 
 
 ###################################################
-### code chunk number 50: bivariate.Rnw:551-553
-###################################################
-x <- rnorm (20)
-y <- rnorm (20)
-
-
-###################################################
-### code chunk number 51: bivariate.Rnw:556-557
-###################################################
-Fh <- ebvcdf (x, y)
-
-
-###################################################
-### code chunk number 52: bivariate.Rnw:563-565
+### code chunk number 47: bivariate.Rnw:504-505
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (Fh,
-    xyrel="f")
+plot (fh, FALSE)
 
 
 ###################################################
-### code chunk number 53: bivariate.Rnw:571-572
+### code chunk number 48: bivariate.Rnw:511-512
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plot (Fh, TRUE)
+plot (fh)
 
 
 ###################################################
-### code chunk number 54: bivariate.Rnw:608-610
+### code chunk number 49: bivariate.Rnw:533-536
+###################################################
+attach (trees)
+Fh <- ebvcdf (Height, Volume)
+detach (trees)
+
+
+###################################################
+### code chunk number 50: bivariate.Rnw:543-544
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (Fh)
+
+
+###################################################
+### code chunk number 51: bivariate.Rnw:546-547
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (Fh, FALSE)
+
+
+###################################################
+### code chunk number 52: bivariate.Rnw:553-554
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (Fh, FALSE, reg=TRUE)
+
+
+###################################################
+### code chunk number 53: bivariate.Rnw:604-608
+###################################################
+f <- ntvpdf (
+    0, 0, 0,      #mean: X, Y, Z
+    1, 1, 1,      #sd:   X, Y, Z
+    -0.5, 0.5, 0) #cor:  X~Y, X~Z, Y~Z
+
+
+###################################################
+### code chunk number 54: bivariate.Rnw:611-612
+###################################################
+f %$% covariance.matrix
+
+
+###################################################
+### code chunk number 55: bivariate.Rnw:616-617
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (f)
+
+
+###################################################
+### code chunk number 56: bivariate.Rnw:628-629
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plot (f, FALSE)
+
+
+###################################################
+### code chunk number 57: bivariate.Rnw:636-638
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plotf_cfield (function (y, z) f (0, y, z), c (-3, 3),
+    xlab="y", ylab="z")
+
+
+###################################################
+### code chunk number 58: bivariate.Rnw:656-658
 ###################################################
 f1 <- nbvpdf (0, 0, 1, 1, 0)
-f1 %$% matrix.variances
+f1 %$% covariance.matrix
 
 
 ###################################################
-### code chunk number 55: bivariate.Rnw:614-615
+### code chunk number 59: bivariate.Rnw:662-663
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f1, all=TRUE, n=20)
 
 
 ###################################################
-### code chunk number 56: bivariate.Rnw:622-624
+### code chunk number 60: bivariate.Rnw:670-672
 ###################################################
 f2 <- nbvpdf (0, 0, 1, 1, 0.75)
-f2 %$% matrix.variances
+f2 %$% covariance.matrix
 
 
 ###################################################
-### code chunk number 57: bivariate.Rnw:629-630
+### code chunk number 61: bivariate.Rnw:677-678
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f2, all=TRUE, n=20)
 
 
 ###################################################
-### code chunk number 58: bivariate.Rnw:636-638
+### code chunk number 62: bivariate.Rnw:684-686
 ###################################################
 f3 <- nbvpdf (0, 0, 1, 1, -0.75)
-f3 %$% matrix.variances
+f3 %$% covariance.matrix
 
 
 ###################################################
-### code chunk number 59: bivariate.Rnw:643-644
+### code chunk number 63: bivariate.Rnw:691-692
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot (f3, all=TRUE, n=20)
-
-
-###################################################
-### code chunk number 60: bivariate.Rnw:657-658
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (dtvpdf (1, 1, 1), TRUE)
-
-
-###################################################
-### code chunk number 61: bivariate.Rnw:665-666
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (dtvpdf (2, 2, 2), TRUE)
-
-
-###################################################
-### code chunk number 62: bivariate.Rnw:674-675
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plot (dtvpdf (0.5, 0.5, 0.5), TRUE)
 
 
