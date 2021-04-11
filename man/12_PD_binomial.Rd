@@ -13,9 +13,9 @@ bnbvcdf (p.X, p.Y, n=1)
 \item{n}{Positive integer, giving the number of trials.}
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.}
 \seealso{

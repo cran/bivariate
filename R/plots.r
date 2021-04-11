@@ -1,5 +1,5 @@
 #bivariate: Bivariate Probability Distributions
-#Copyright (C), Abby Spurdle, 2020
+#Copyright (C), Abby Spurdle, 2018 to 2021
 
 #This program is distributed without any warranty.
 
@@ -20,24 +20,28 @@
 	xlab, ylab, zlab,
 	z.axis, zlim,
 	contours, ncontours, contour.labels, fb, xyrel)
-{	is.cont = inherits (f, "cbv")
-	is.uniform = (inherits (f, "dubv") || inherits (f, "cubv") )
-	is.cdf = inherits (f, "cdf")
-	is.k = inherits (f, "kbvpdf")
-	is.e = inherits (f, "ebvcdf")
+{	is.cont = is (f, "CBV")
+	is.uniform = (is (f, "DUBV") || is (f, "CUBV") )
+	is.cdf = is (f, "CDF")
+	is.k = is (f, "KBVPDF")
+	is.e = is (f, "EBVCDF")
 	is.np = (is.k || is.e)
 
+	if (is.e)
+		is.cont = TRUE
+
 	if (is.np)
-	{	if (missing (xlab) ) xlab = f %$% "xname"
-		if (missing (ylab) ) ylab = f %$% "yname"
+	{	if (missing (xlab) ) xlab = f@variable.names [1]
+		if (missing (ylab) ) ylab = f@variable.names [2]
 	}
 	else
 	{	if (missing (xlab) ) xlab = "x"
 		if (missing (ylab) ) ylab = "y"
 	}
 	
-	x = y = fv = 0
-	UNPACK (bvmat (f, xlim, ylim, reg=TRUE, n=n) )
+	{{	. = bvmat (f, xlim, ylim, reg=TRUE, n=n)
+		x = .@x; y = .@y; fv = .@fv
+	}}
 
 	if (in3d)
 	{	if (missing (zlab) )
@@ -54,8 +58,8 @@
 		}
 		if (missing (zlim) )
 		{	if (is.uniform)
-			{	if (f %$% "p" <= 1 || is.cdf) zlim = c (0, 1)
-				else zlim = c (0, f %$% "p")
+			{	if (f@p <= 1 || is.cdf) zlim = c (0, 1)
+				else zlim = c (0, f@p)
 			}
 			else if (is.cdf) zlim = c (0, 1)
 			else zlim = c (0, max (fv) )
@@ -66,7 +70,7 @@
 	}
 	else
 	{	if (missing (contours) )
-		{	if (inherits (f, "dubvpmf") || inherits (f, "cubvpdf") )
+		{	if (is (f, "DUBVPMF") || is (f, "CUBVPDF") )
 				contours = FALSE
 			else
 				contours = TRUE
@@ -99,18 +103,18 @@
 			else xyrel="f"
 		}
 
-		if (is.cont) plot_cfield (x, y, fv, xlab=xlab, ylab=ylab, contours=contours, contour.labels=contour.labels, ncontours=ncontours, fb=fb, xyrel=xyrel,...)
+		if (is.cont) plot_cfield (x, y, fv, xlab=xlab, ylab=ylab, contours=contours, contour.labels=contour.labels, ncontours=ncontours, fb=fb, xyrel=xyrel, ...)
 		else plot_dfield (x, y, fv, xlab=xlab, ylab=ylab, contours=contours, contour.labels=contour.labels, ncontours=ncontours, fb=fb, xyrel=xyrel, ...)
 	}
 }
 
 .plot.bv4 = function (f, in3d, xlim, ylim, ..., main, xlab, ylab, contour.labels, z.axis, ref.arrows=TRUE, cex=0.65)
-{	if (inherits (f, "dubv") ) F = dubvcdf (0, 0, 0, 0)
-	else if (inherits (f, "cubv") ) F = cubvcdf (0, 0, 0, 0)
-	else if (inherits (f, "bnbv") ) F = bnbvcdf (0, 0)
-	else if (inherits (f, "pbv") ) F = pbvcdf (1, 1, 0)
-	else if (inherits (f, "nbv") ) F = nbvcdf (0, 0, 1, 1, 0)
-	else if (inherits (f, "bmbv") ) F = bmbvcdf (0, 0, 1, 1, 0, 0, 1, 1)
+{	if (is (f, "DUBV") ) F = dubvcdf (0, 0, 0, 0)
+	else if (is (f, "CUBV") ) F = cubvcdf (0, 0, 0, 0)
+	else if (is (f, "BNBV") ) F = bnbvcdf (0, 0)
+	else if (is (f, "PBV") ) F = pbvcdf (1, 1, 0)
+	else if (is (f, "NBV") ) F = nbvcdf (0, 0, 1, 1, 0)
+	else if (is (f, "BMBV") ) F = bmbvcdf (0, 1)
 	else stop ()
 
 	cv = class (F)
@@ -141,53 +145,53 @@
 		plotf_cfield3 (f, xlim, ylim, zlim, ..., xlab=xlab, ylab=ylab, zlab=zlab, nslides=nslides, emph=emph)
 }
 
-bvplot.dubvpmf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
+bv.plotf.DUBVPMF = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
 	.plot.bv (f, in3d, xlim, ylim, ..., .all=all)
-bvplot.dubvcdf = function (F, in3d=TRUE, ..., xlim, ylim)
+bv.plotf.DUBVCDF = function (F, in3d=TRUE, ..., xlim, ylim)
 	.plot.bv (F, in3d, xlim, ylim, ...)
 
-bvplot.bnbvpmf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
+bv.plotf.BNBVPMF = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
 	.plot.bv (f, in3d, xlim, ylim, ..., .all=all)
-bvplot.bnbvcdf = function (F, in3d=TRUE, ..., xlim, ylim)
+bv.plotf.BNBVCDF = function (F, in3d=TRUE, ..., xlim, ylim)
 	.plot.bv (F, in3d, xlim, ylim, ...)
 
-bvplot.pbvpmf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
+bv.plotf.PBVPMF = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE)
 	.plot.bv (f, in3d, xlim, ylim, ..., .all=all)
-bvplot.pbvcdf = function (F, in3d=TRUE, ..., xlim, ylim)
+bv.plotf.PBVCDF = function (F, in3d=TRUE, ..., xlim, ylim)
 	.plot.bv (F, in3d, xlim, ylim, ...)
 
-bvplot.cubvpdf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE, n=20)
+bv.plotf.CUBVPDF = function (f, in3d=TRUE, ..., all=FALSE, n=20)
+	.plot.bv (f, in3d, ..., .all=all, n=n)
+bv.plotf.CUBVCDF = function (F, in3d=TRUE, ..., n=20)
+	.plot.bv (F, in3d, ..., n=n)
+
+bv.plotf.NBVPDF = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE, n=30)
 	.plot.bv (f, in3d, xlim, ylim, ..., .all=all, n=n)
-bvplot.cubvcdf = function (F, in3d=TRUE, ..., xlim, ylim, n=20)
+bv.plotf.NBVCDF = function (F, in3d=TRUE, ..., xlim, ylim, n=30)
 	.plot.bv (F, in3d, xlim, ylim, ..., n=n)
 
-bvplot.nbvpdf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE, n=30)
-	.plot.bv (f, in3d, xlim, ylim, ..., .all=all, n=n)
-bvplot.nbvcdf = function (F, in3d=TRUE, ..., xlim, ylim, n=30)
-	.plot.bv (F, in3d, xlim, ylim, ..., n=n)
-
-bvplot.ntvpdf = function (f, iso=TRUE, ..., xlim, ylim, zlim)
+bv.plotf.NTVPDF = function (f, iso=TRUE, ..., xlim, ylim, zlim)
 	.plot.ntv (f, iso, xlim, ylim, zlim, ...)
 
-bvplot.bmbvpdf = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE, n=40)
+bv.plotf.BMBVPDF = function (f, in3d=TRUE, ..., xlim, ylim, all=FALSE, n=40)
 	.plot.bv (f, in3d, xlim, ylim, ..., .all=all, n=n)
-bvplot.bmbvcdf = function (F, in3d=TRUE, ..., xlim, ylim, n=40)
+bv.plotf.BMBVCDF = function (F, in3d=TRUE, ..., xlim, ylim, n=40)
 	.plot.bv (F, in3d, xlim, ylim, ..., n=n)
 
-bvplot.gbvpmf = function (f, in3d=TRUE, data, ...)
+bv.plotf.GBVPMF = function (f, in3d=TRUE, data, ...)
 {	if (in3d) .plot.bv (f, in3d, ...)
 	else .plot.gbv (f, data, ...)
 }
 
-bvplot.dtvpdf = function (f, in3d=TRUE, ..., log=FALSE, n=30)
+bv.plotf.DTVPDF = function (f, in3d=TRUE, ..., log=FALSE, n=30)
 	.plot.dtv (f, in3d, log, ..., n=n)
 
-bvplot.kbvpdf = function (fh, in3d=TRUE, data = (fh %$% "n" <= 2000), ..., xlim, ylim, n=30, point.color="#00000030")
+bv.plotf.KBVPDF = function (fh, in3d=TRUE, data = (fh@n <= 2000), ..., xlim, ylim, n=30, point.color="#00000030")
 {	if (in3d || (! data) ) .plot.bv (fh, in3d, xlim, ylim, ..., n=n)
 	else .plot.kbv (fh, xlim, ylim, point.color, ..., n=n)
 }
 
-bvplot.ebvcdf = function (Fh, in3d=TRUE, ..., reg = (Fh %$% "n" > 40) )
+bv.plotf.EBVCDF = function (Fh, in3d=TRUE, ..., reg = (Fh@n > 40) )
 {	if (reg) ebvcdf_plot_reg (Fh, in3d, ...)
 	else if (in3d) ebvcdf_plot_step_3d (Fh, ...)
 	else ebvcdf_plot_step_2d (Fh, ...)
@@ -198,9 +202,11 @@ ebvcdf_plot_reg = function (Fh, in3d=TRUE, ..., xlim, ylim, n=30)
 
 ebvcdf_plot_step_2d = function (Fh, data=TRUE, steps=data, ...,
 	point.color="#00000030", line.color="#000000", border.color="#808080",
-	main.colff = opt.litmus.fit (), rim.colff=rim.litmus.fit)
+	main.colff = st.litmus.fit (theme), rim.colff=rim.litmus.fit,
+	theme)
 	.ebvcdf_plot_step_2d (Fh, data, steps, point.color, line.color, border.color, main.colff, rim.colff, ...)
 
 ebvcdf_plot_step_3d = function (Fh, ...,
-	top.color = opt.top.color (), side.color = opt.side.color (), rim.color = "#D0D0D0")
+	top.color = st.top.color (theme), side.color = st.side.color (theme), rim.color = "#D0D0D0",
+	theme)
 	.ebvcdf_plot_step_3d (Fh, top.color, side.color, rim.color, ...)

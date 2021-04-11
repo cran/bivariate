@@ -42,9 +42,9 @@ Also, in the bivariate case, both sd/variance parameters need to be positive, an
 Note that the misc3d package needs to be installed and loaded, in order to plot the trivariate normal distribution.
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.}
 \seealso{

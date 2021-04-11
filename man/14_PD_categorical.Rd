@@ -10,9 +10,9 @@ gbvpmf (p)
 \item{p}{Numeric matrix of probabilities (or frequencies), preferably with row and column names.}
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.
 

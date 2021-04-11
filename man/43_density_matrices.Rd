@@ -1,15 +1,16 @@
 \name{43_density_matrices}
 \alias{Density Matrices}
-\alias{bvmat.dubv}
-\alias{bvmat.bnbv}
-\alias{bvmat.pbv}
-\alias{bvmat.cubv}
-\alias{bvmat.nbv}
-\alias{bvmat.bmbv}
-\alias{bvmat.gbv}
-\alias{bvmat.dtv}
-\alias{bvmat.kbv}
-\alias{bvmat.ebv}
+\alias{PMatrix-class}
+\alias{bvmat.DUBV}
+\alias{bvmat.BNBV}
+\alias{bvmat.PBV}
+\alias{bvmat.CUBV}
+\alias{bvmat.NBV}
+\alias{bvmat.BMBV}
+\alias{bvmat.GBV}
+\alias{bvmat.DTV}
+\alias{bvmat.KBV}
+\alias{bvmat.EBV}
 \alias{ebvmat_reg}
 \alias{ebvmat_step}
 \title{Density Matrices}
@@ -20,18 +21,18 @@
 #(bn) binomial
 #(p)  poisson
 ########################################
-\method{bvmat}{dubv}(sf, xlim, ylim, \dots)
-\method{bvmat}{bnbv}(sf, xlim, ylim, \dots)
-\method{bvmat}{pbv}(sf, xlim, ylim, \dots)
+\method{bvmat}{DUBV}(sf, xlim, ylim, \dots)
+\method{bvmat}{BNBV}(sf, xlim, ylim, \dots)
+\method{bvmat}{PBV}(sf, xlim, ylim, \dots)
 
 ########################################
 #(cu) continuous uniform
 #(n)  normal
 #(bm) bimodal
 ########################################
-\method{bvmat}{cubv}(sf, xlim, ylim, \dots, n=10)
-\method{bvmat}{nbv}(sf, xlim, ylim, \dots, n=10)
-\method{bvmat}{bmbv}(sf, xlim, ylim, \dots, n=10)
+\method{bvmat}{CUBV}(sf, xlim, ylim, \dots, n=10)
+\method{bvmat}{NBV}(sf, xlim, ylim, \dots, n=10)
+\method{bvmat}{BMBV}(sf, xlim, ylim, \dots, n=10)
 
 ########################################
 #(g)  categorical
@@ -39,10 +40,10 @@
 #(k)  kernel
 #(e)  empirical
 ########################################
-\method{bvmat}{gbv}(sf, \dots)
-\method{bvmat}{dtv}(sf, \dots, log=FALSE, n=10)
-\method{bvmat}{kbv}(sf, xlim, ylim, \dots, n=10)
-\method{bvmat}{ebv}(sf, \dots, reg=TRUE)
+\method{bvmat}{GBV}(sf, \dots)
+\method{bvmat}{DTV}(sf, \dots, log=FALSE, n=10)
+\method{bvmat}{KBV}(sf, xlim, ylim, \dots, n=10)
+\method{bvmat}{EBV}(sf, \dots, reg=TRUE)
 
 ########################################
 #additional functions
@@ -75,11 +76,11 @@ If bvmat is called with a normal density function it will return densities (from
 Note that the ebv (empirical) method calls either the ebvmat_reg or ebvmat_step function, depending on the reg argument.
 }
 \value{
-A list with:
+An S4 object with:
 
-An fv component, which is a matrix, of densities or probabilities.
+An fv slot, which is a matrix, of densities or probabilities.
 
-x and y components, which are the evaluation points.\cr
+x and y slots, which are the evaluation points.\cr
 (This length of x should equal the number of rows, and the length of y should equal the number of columns).
 
 And exception to the above is ECDFs with reg=FALSE, where x and y are breakpoints.\cr

@@ -1,34 +1,73 @@
-\name{21_mockup_function_objects}
-\alias{Mockup Function Objects}
-\alias{mf.f}
-\alias{mf.F}
-\alias{mf.gf}
-\alias{mf.f3}
-\alias{mf.wf}
-\alias{mf.fh}
-\alias{mf.Fh}
-\title{Mockup Function Objects}
-\description{Hard-coded functions, representing (runtime) function objects.
+\name{21_function_placeholders}
+\alias{Function Objects}
+\alias{PMF-class}
+\alias{PDF-class}
+\alias{CDF-class}
+\alias{BV-class}
+\alias{TV-class}
+\alias{DBV-class}
+\alias{CBV-class}
+\alias{SBV-class}
+\alias{CTV-class}
+\alias{DUBV-class}
+\alias{BNBV-class}
+\alias{PBV-class}
+\alias{GBV-class}
+\alias{CUBV-class}
+\alias{NBV-class}
+\alias{NTV-class}
+\alias{BMBV-class}
+\alias{DTV-class}
+\alias{KBV-class}
+\alias{EBV-class}
+\alias{DUBVPMF-class}
+\alias{DUBVCDF-class}
+\alias{BNBVPMF-class}
+\alias{BNBVCDF-class}
+\alias{PBVPMF-class}
+\alias{PBVCDF-class}
+\alias{GBVPMF-class}
+\alias{CUBVPDF-class}
+\alias{CUBVCDF-class}
+\alias{NBVPDF-class}
+\alias{NBVCDF-class}
+\alias{NTVPDF-class}
+\alias{NTVCDF-class}
+\alias{BMBVPDF-class}
+\alias{BMBVCDF-class}
+\alias{DTVPDF-class}
+\alias{KBVPDF-class}
+\alias{EBVCDF-class}
+\alias{fobj.f}
+\alias{fobj.F}
+\alias{fobj.gf}
+\alias{fobj.f3}
+\alias{fobj.wf}
+\alias{fobj.fh}
+\alias{fobj.Fh}
+\title{Function Objects}
+\description{
+Hard-coded functions, representing (runtime) function objects.
 
 DO NOT CALL THESE FUNCTIONS.\cr
 CALL A CONSTRUCTOR, WHICH SHOULD RETURN A FUNCTION OBJECT.}
 \usage{
 #PMF/PDF and CDF
 #(all distributions, except the exceptions below)
-mf.f (x, y)
-mf.F (x, y)
+fobj.f (x, y)
+fobj.F (x, y)
 
 #Categorical PMF
-mf.gf (a, b)
+fobj.gf (a, b)
 
 #Trivariate Normal PDF
-mf.f3 (x, y, z)
+fobj.f3 (x, y, z)
 
 #Dirichlet PDF
-mf.wf (x, y, z = 1 - x - y, \dots, log=FALSE)
+fobj.wf (x, y, z = 1 - x - y, \dots, log=FALSE)
 
 #ECDF 
-mf.Fh (x, y)
+fobj.Fh (x, y)
 }
 \arguments{
 \item{x, y, z}{

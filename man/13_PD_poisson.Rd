@@ -20,9 +20,9 @@ pbvcdf.2 (mean.X, mean.Y, cov)
 \item{cov}{Suitable numeric value, giving the covariance of X and Y.}
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.}
 \seealso{

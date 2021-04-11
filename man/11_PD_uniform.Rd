@@ -29,9 +29,9 @@ cubvcdf (
 \item{a.Y, b.Y}{Integers (in the discrete case) or numeric values (in the continuous case), giving the min/max possible values of Y.}
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.}
 \seealso{

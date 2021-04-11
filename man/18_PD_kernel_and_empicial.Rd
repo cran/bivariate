@@ -6,26 +6,35 @@
 \description{Bivariate kernel density estimates and bivariate empirical cumulative distribution functions.}
 \usage{
 #kernel density estimates
-kbvpdf (x, y, xbw, ybw)
+kbvpdf (x, y, xbw, ybw, ..., xsmoothness=1, ysmoothness=1, data)
 
 #ecdf
-ebvcdf (x, y)
+ebvcdf (x, y, ..., data)
 }
 \arguments{
-\item{x, y}{Numeric vectors, of x and y values.}
+\item{x, y}{
+	Equal length numeric vectors, of x and y values.\cr
+	Ignored, if data is provided.}
 \item{xbw, ybw}{Optional numeric values, giving the x and y bandwidths.}
+\item{xsmoothness, ysmoothness}{
+	Numeric scalars, giving the relative smoothness.\cr
+	(Initial default bandwidth parameters are multiplied by the smoothness parameters).\cr
+	Ignored, if the corresponding bandwidth parameters are provided.}
+\item{data}{A two-column data.frame object.}
+\item{\dots}{Ignored.}
 }
 \details{
-Default xlab and ylab labels are taken for deparsed x and y names.
+Default xlab and ylab labels are taken for deparsed x and y names.\cr
+(Unless data is provided, in which case, column names are used).
 
 Bandwidth parameters are optional, however, the default values are likely to be sub-optimal.
 
 Kernel density estimates use KernSmooth::bkde2D.
 }
 \value{
-Self-referencing function objects.
+Self-referencing S4-based function objects.
 
-Refer to \link{Mockup Function Objects}.
+Refer to \link{Function Objects}.
 
 Note that you can't evaluate the function representing kernel density estimates.\cr
 (However, the bvmat function can be used to compute density matrices).

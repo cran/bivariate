@@ -1,12 +1,12 @@
 \name{42_random_numbers}
 \alias{Random Numbers}
-\alias{bvrng.nbvpdf}
-\alias{bvrng.ntvpdf}
+\alias{bvrng.NBVPDF}
+\alias{bvrng.NTVPDF}
 \title{Random Numbers}
 \description{Generate random numbers from bivariate and trivariate normal distributions.}
 \usage{
-\method{bvrng}{nbvpdf}(f, n=1, \dots)
-\method{bvrng}{ntvpdf}(f, n=1, \dots)
+\method{bvrng}{NBVPDF}(f, n=1, \dots)
+\method{bvrng}{NTVPDF}(f, n=1, \dots)
 }
 \arguments{
 \item{f}{

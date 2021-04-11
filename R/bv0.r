@@ -1,5 +1,5 @@
 #bivariate: Bivariate Probability Distributions
-#Copyright (C), Abby Spurdle, 2020
+#Copyright (C), Abby Spurdle, 2018 to 2021
 
 #This program is distributed without any warranty.
 
@@ -11,45 +11,79 @@
 #Also, this license should be available at:
 #https://cran.r-project.org/web/licenses/GPL-2
 
-.CV.dubvpmf = c ("dubvpmf", "pmf", "dubv", "dbv", "bv")
-.CV.dubvcdf = c ("dubvcdf", "cdf", "dubv", "dbv", "bv")
-.CV.cubvpdf = c ("cubvpdf", "pdf", "cubv", "cbv", "bv")
-.CV.cubvcdf = c ("cubvcdf", "cdf", "cubv", "cbv", "bv")
+setClass ("PDF", contains="function")
+setClass ("PMF", contains="function")
+setClass ("CDF", contains="function")
 
-.CV.bnbvpmf = c ("bnbvpmf", "pmf", "bnbv", "dbv", "bv")
-.CV.bnbvcdf = c ("bnbvcdf", "cdf", "bnbv", "dbv", "bv")
-.CV.pbvpmf = c ("pbvpmf", "pmf", "pbv", "dbv", "bv")
-.CV.pbvcdf = c ("pbvcdf", "cdf", "pbv", "dbv", "bv")
+setClass ("BV", slots = c (.class.info="character") )
+	setClass ("DBV", contains="BV")
+	setClass ("SBV", contains="BV")
+	setClass ("CBV", contains="BV")
+setClass ("TV", slots = c (.class.info="character") )
+	setClass ("CTV", contains="TV")
 
-.CV.nbvpdf = c ("nbvpdf", "pdf", "nbv", "cbv", "bv")
-.CV.nbvcdf = c ("nbvcdf", "cdf", "nbv", "cbv", "bv")
-.CV.bmbvpdf = c ("bmbvpdf", "pdf", "bmbv", "cbv", "bv")
-.CV.bmbvcdf = c ("bmbvcdf", "cdf", "bmbv", "cbv", "bv")
-.CV.ntvpdf = c ("ntvpdf", "pdf", "ntv", "ctv", "tv")
+setClass ("PMatrix",
+	slots = c (
+		fv="matrix",
+		x="numeric",
+		y="numeric") )
 
-.CV.gbvpmf = c ("gbvpmf", "pmf", "gbv", "dbv", "bv")
-.CV.dtvpdf = c ("dtvpdf", "pdf", "dtv", "ctv", "tv")
-.CV.kbvpdf = c ("kbvpdf", "pdf", "kbv", "cbv", "bv")
-.CV.ebvcdf = c ("ebvcdf", "cdf", "ebv", "cbv", "bv")
+setMethod ("show", "BV", function (object) print (object) )
+setMethod ("show", "TV", function (object) print (object) )
 
-bvplot = function (...) UseMethod ("bvplot")
+.class.info = matrix (c (
+	"DUBVPMF", "Bivariate Discrete Uniform Mass Function",           "f (x, y)",
+	"BNBVPMF", "Bivariate Binomial Mass Function",                   "f (x, y)",
+	"PBVPMF",  "Bivariate Poisson Mass Function",                    "f (x, y)",
+	"GBVPMF",  "Bivariate Categorical Mass Function",                "f (x, y)",
+	"CUBVPDF", "Bivariate Continuous Uniform Density Function",      "f (x, y)",
+	"NBVPDF",  "Bivariate Normal Density Function",                  "f (x, y)",
+	"BMBVPDF", "Bivariate Bimodal Density Function",                 "f (x, y)",
+	"DUBVCDF", "Bivariate Discrete Uniform Distribution Function",   "F (x, y)",
+	"BNBVCDF", "Bivariate Binomial Distribution Function",           "F (x, y)",
+	"PBVCDF",  "Bivariate Poisson Distribution Function",            "F (x, y)",
+	"CUBVCDF", "Bivariate Continuous Uniform Distribution Function", "F (x, y)",
+	"NBVCDF",  "Bivariate Normal Distribution Function",             "F (x, y)",
+	"BMBVCDF", "Bivariate Bimodal Distribution Function",            "F (x, y)",
+	"NTVPDF",  "Trivariate Normal Density Function",                 "f (x, y, z)",
+	"DTVPDF",  "Trivariate Dirichlet Density Function",              "f (x, y, z = 1 - x - y)",
+	"KBVPDF",  "Bivariate Kernel Density Estimate",   "equivalent to fh (x, y)",
+	"EBVCDF",  "Bivariate Empirical Distribution Function",         "Fh (x, y)"
+	),, 3, byrow=TRUE)
+
+.get.info = function (cn)
+{	I = match (cn, .class.info [,1])
+	if (is.na (I [1]) )
+		stop ("constructor error")
+	.class.info [I, 2:3]
+}
+
+.THIS = function ()
+	sys.function (-1)
+
+bv.printf = function (...) UseMethod ("bv.printf")
+bv.plotf = function (...) UseMethod ("bv.plotf")
 bvrng = function (...) UseMethod ("bvrng")
 bvmat = function (...) UseMethod ("bvmat")
 
-print.bv = function (x, ...) object.summary (x, ...)
-print.tv = function (x, ...) object.summary (x, ...)
-plot.bv = function (x, ...) bvplot (x, ...)
-plot.tv = function (x, ...) bvplot (x, ...)
+print.BV = function (x, ...) .bv.printf (x)
+print.TV = function (x, ...) .bv.printf (x)
+plot.BV = function (x, ...) bv.plotf (x, ...)
+plot.TV = function (x, ...) bv.plotf (x, ...)
+
+bv.printf.BV = function (sf, ...) .bv.printf (sf)
+bv.printf.TV = function (sf, ...) .bv.printf (sf)
+
+.bv.printf = function (sf, ...)
+{	cat ("<S4-Based Function Object>\n")
+	cat (sf@.class.info [1], "\n", sep="")
+	cat ("    ", sf@.class.info [2], "\n", sep="")
+}
 
 rim.litmus.fit = function (x)
 	rainbow.litmus.fit (x, c=10, l=82.5, start=220, end=0)
 
-gpd.litmus.fit = function (x)
-{	colvs = cbind (c (90, 80, 80, 70), 35, 70)
-	litmus.fit (x, colvs, color.space="HCL")
-}
-
-.dbv.eval = function (., f, x, y, min, max)
+.dbv.eval = function (sf, evalf, x, y, min, max)
 {	x = as.integer (x)
 	y = as.integer (y)
 	v = cbind (x, y, deparse.level=0)
@@ -66,29 +100,29 @@ gpd.litmus.fit = function (x)
 		if (any (v [,2] > max [2]) )
 			stop ("y evaluation value outside (above) supported region")
 	}
-	f (., v [,1], v [,2])
+	evalf (sf, v [,1], v [,2])
 }
 
-.cbv.eval = function (., f, x, y)
+.cbv.eval = function (sf, evalf, x, y)
 {	x = as.numeric (x)
 	y = as.numeric (y)
 	v = cbind (x, y, deparse.level=0)
 	.val.finite (v)
-	f (., v [,1], v [,2])
+	evalf (sf, v [,1], v [,2])
 }
 
-.gbv.eval = function (., f, x, y)
+.gbv.eval = function (sf, evalf, x, y)
 {	if (is.character (x) )
-	{	x = match (x, .$xnames)
+	{	x = match (x, sf@.level.names [[1]])
 		if (any (is.na (x) ) )
 			.gbv.eval.err ()
 	}
 	if (is.character (y) )
-	{	y = match (y, .$ynames)
+	{	y = match (y, sf@.level.names [[2]])
 		if (any (is.na (y) ) )
 			.gbv.eval.err ()
 	}
-	.dbv.eval (., f, x, y, c (1, 1), c (.$ngx, .$ngy) )
+	.dbv.eval (sf, evalf, x, y, c (1, 1), sf@nlevels)
 }
 
 .gbv.eval.err = function ()
@@ -132,14 +166,20 @@ gpd.litmus.fit = function (x)
 	n = length (x)
 	if (n != length (y) )
 		stop ("length (x) != length (y)")
-	LIST (n, x, y)
+	list (n=n, x=x, y=y)
 }
 
 #mockup function objects
-mf.f = function (x, y) 0
-mf.F = function (x, y) 0
-mf.gf = function (a, b) 0
-mf.wf = function (x, y, z = 1 - x - y, ..., log=FALSE) 0
-mf.f3 = function (x, y, z) 0
-mf.fh = function (x, y) 0
-mf.Fh = function (x, y) 0
+fobj.f = function (x, y) 0
+fobj.F = function (x, y) 0
+fobj.gf = function (a, b) 0
+fobj.wf = function (x, y, z = 1 - x - y, ..., log=FALSE) 0
+fobj.f3 = function (x, y, z) 0
+fobj.fh = function (x, y) 0
+fobj.Fh = function (x, y) 0
+
+"%$%" = function (object, name)
+{	warning ("%$% operator deprecated, use @")
+	attr (object, as.character (substitute (name) ) )
+
+}

@@ -46,9 +46,9 @@ par(mar=c(4.1, 4.1, 1.35, 1.6), cex=0.7, cex.main=1)))
 set.seed (1)
 @
 
-\stitle {bivariate}{0.6.0}{Bivariate Probability Distributions}
+\stitle {bivariate}{0.7.0}{Bivariate Probability Distributions}
 
-\sabstract {Convenience functions for plotting/evaluating bivariate (uniform, binomial, Poisson, categorical, normal and bimodal) distributions, trivariate (normal and Dirichlet) distributions, bivariate kernel density estimates and bivariate empirical cumulative distribution functions. Supports their probability mass functions (PMFs), probability density functions (PDFs) and cumulative distribution functions (CDFs), generally where applicable.}
+\sabstract {Convenience functions for plotting/evaluating bivariate (uniform, binomial, Poisson, categorical, normal and bimodal) distributions, trivariate (normal and Dirichlet) distributions, bivariate kernel density estimates and bivariate empirical cumulative distribution functions. Supports their probability mass functions (PMFs), probability density functions (PDFs) and cumulative distribution functions (CDFs), mostly where applicable.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Introduction}
@@ -81,7 +81,7 @@ Some of these distributions (color-coded in gold, or brown) are equivalent to th
 
 Note that:
 \begin {itemize}
-	\item This package uses a system of self-referencing function objects.\\
+	\item This package uses a system of self-referencing S4-based function objects.\\
 	This allows us to plot and evaluate functions, without specifying their parameters, each time.
 	\item The functions for evaluating discrete probability distributions, coerce their arguments to integers.\\
 	If you try to evaluate discrete probability distributions with non-integer arguments, you may get unexpected results.
@@ -91,20 +91,19 @@ Note that:
 Refer to the barsurf package for information on how to customize plots, if required.\\
 (Plotting functions in this package call plotting functions from the barsurf package).
 
-Also note that this vignette contains a small amount non-visible R code to change plot margins and colors.
+Also note that this vignette contains a small amount non-visible R code to change plot margins.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Preliminary Code\\(And Required Packages)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-I will load (and attach) the intoo, barsurf and bivariate packages:
+I will load (and attach) the barsurf and bivariate packages:
 
 <<>>=
-library (intoo)
 library (barsurf)
 library (bivariate)
 @
 
-Note that the bivariate package imports the intoo, barsurf, mvtnorm and KernSmooth packages, and the barsurf package imports the kubik and colorspace packages.
+Note that the bivariate package imports the barsurf, mvtnorm and KernSmooth packages, and the barsurf package imports the kubik and colorspace packages.
 
 Also, the misc3d package needs to be installed and loaded, in order to plot the trivariate normal distribution.\\
 And I will use a dataset from the MASS package, later.
@@ -112,18 +111,16 @@ And I will use a dataset from the MASS package, later.
 I will set global options: 
 
 <<>>=
-set.bs.options (nhl=0, ref.arrows=FALSE, rendering.style="pdf")
+set.bs.options (nhl=0, rendering.style="pdf", theme="gold", ref.arrows=FALSE)
 @
 
 The ``pdf'' rendering style uses finer lines.
 
+Also, I'm setting the theme (for default colors) to gold, but I will use blue for many plots.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Discrete \gtmu {Bivariate} Uniform Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<echo=FALSE>>=
-set.bs.theme ("gold")
-@
-
 We can describe a discrete bivariate uniform distribution as the product of two discrete univariate uniform distributions, so:
 \begin {align*}
 \mathbb {P} (X = x, Y = y) &= f_{X,Y} (x, y; a_X, b_X, a_Y, b_Y)\\
@@ -217,18 +214,11 @@ And again we can plot the functions:
 <<fig=TRUE, width=4.75, height=3>>=
 plot (f)
 @
-<<echo=FALSE>>=
-set.bs.options (nhl=0, ref.arrows=FALSE, rendering.style="pdf", main="gpd.litmus.fit")
-@
 <<fig=TRUE, width=4.75, height=3>>=
 plot (f, FALSE)
 @
-<<echo=FALSE>>=
-set.bs.theme ("gold")
-@
 \end {center}
 
-\newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
 plot (F)
@@ -242,10 +232,6 @@ If n is omitted, it defaults to one, giving a bivariate Bernoulli distribution.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate \btmu {Poisson} Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<echo=FALSE>>=
-set.bs.theme ("blue")
-@
-
 Based on Karlis and Ntzoufras (2003), we can define the bivariate Poisson probability mass function as:
 \begin {align*}
 \mathbb {P} (X = x, Y = y) &= f_{X,Y} (x, y; \lambda_1, \lambda_2, \lambda_3)\\
@@ -276,10 +262,10 @@ And plots, in 2d and 3d:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f)
+plot (f, theme="blue")
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f, FALSE)
+plot (f, FALSE, theme="blue")
 @
 \end {center}
 
@@ -311,15 +297,15 @@ And plots in 2d and 3d:
 
 \begin {center}
 <<eval=FALSE>>=
-plot (f, FALSE)
+plot (f, FALSE, theme="blue")
 @
 <<fig=TRUE, echo=FALSE, width=4.75, height=3>>=
 p0 <- matrix.margins ()
-plot (f, FALSE)
+plot (f, FALSE, theme="blue")
 par (p0)
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f)
+plot (f, theme="blue")
 @
 \end {center}
 
@@ -339,12 +325,8 @@ f ("B", "d")
 Note that the probhat package supports categorical distributions, and provides more tools.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section* {Continuous Bivariate \gtmu {Uniform} Distributions\\(On Closed Intervals)}
+\section* {Continuous Bivariate \gtmu {Uniform} Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<echo=FALSE>>=
-set.bs.theme ("gold")
-@
-
 Continuous bivariate uniform distributions are similar to discrete bivariate uniform distributions. However, we have a probability density function rather than a probability mass function.
 
 We can construct its probability density function using the \tmu {cubvpdf} function, and its cumulative distribution function using the \tmu {cubvcdf} function.\\
@@ -375,10 +357,6 @@ plot (F)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section* {Bivariate \btmu {Normal} Distributions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<echo=FALSE>>=
-set.bs.theme ("blue")
-@
-
 This package uses the mvtnorm package to evaluate bivariate normal distributions.\\
 Please refer to that package for technical details.
 
@@ -398,20 +376,20 @@ And plots in 2d and 3d:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f)
+plot (f, theme="blue")
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f, FALSE)
+plot (f, FALSE, theme="blue")
 @
 \end {center}
 
 \newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (F)
+plot (F, theme="blue")
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (F, FALSE)
+plot (F, FALSE, theme="blue")
 @
 \end {center}
 
@@ -428,21 +406,19 @@ All functions take eight arguments, and follow the same principles as the normal
 Here's a an example, where the component means of $X$ are 3.5 and 6.5, the component means of $Y$ are zero, and all standard deviations are one:
 
 <<>>=
-f <- bmbvpdf (
-    3.5, 0, 1, 1,    #first component distribution
-    6.5, 0, 1, 1)    #second component distribution
+f <- bmbvpdf (-1.5, 1.5)
 @
 
 And plots in 2d and 3d:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f,
-    axes = c (TRUE, FALSE), xat = c (3.5, 6.5) )
+plot (f, theme="blue",
+    axes = c (TRUE, FALSE), xat = c (-1.5, 1.5) )
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f, FALSE,
-    axes = c (TRUE, FALSE), xat = c (3.5, 6.5) )
+plot (f, FALSE, theme="blue",
+    axes = c (TRUE, FALSE), xat = c (-1.5, 1.5) )
 @
 \end {center}
 
@@ -467,10 +443,10 @@ And plots in 2d and 3d:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f)
+plot (f, theme="blue")
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (f, FALSE)
+plot (f, FALSE, theme="blue")
 @
 \end {center}
 
@@ -490,26 +466,25 @@ I've adapted this example from KernSmooth:\\
 
 <<>>=
 data ("geyser", package="MASS")
+names (geyser)
 @
 
 <<>>=
-attach (geyser)
-fh <- kbvpdf (duration, waiting, 0.7, 7)
-detach (geyser)
+fh <- kbvpdf (,,0.7, 7, data = geyser [,2:1])
 @
 
 Again, once we have constructed our object we can plot it:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (fh, FALSE)
+plot (fh, FALSE, theme="blue")
 @
 \end {center}
 
 \newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (fh)
+plot (fh, theme="blue")
 @
 \end {center}
 
@@ -531,9 +506,11 @@ It takes two arguments, two equal length vectors of observations.
 Here's an example, using the trees data:
 
 <<>>=
-attach (trees)
-Fh <- ebvcdf (Height, Volume)
-detach (trees)
+names (trees)
+@
+
+<<>>=
+Fh <- ebvcdf (data = trees [,2:3])
 @
 
 \newpage
@@ -541,17 +518,17 @@ And plots in 2d and 3d:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (Fh)
+plot (Fh, theme="blue")
 @
 <<fig=TRUE, width=4.75, height=3>>=
-plot (Fh, FALSE)
+plot (Fh, FALSE, theme="blue")
 @
 \end {center}
 
 \newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
-plot (Fh, FALSE, reg=TRUE)
+plot (Fh, FALSE, reg=TRUE, theme="blue")
 @
 \end {center}
 
@@ -563,9 +540,7 @@ Note that by default, if the number of observations is less than or equal to for
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection* {Imported R Packages}
 
-Spurdle, A. (2020). intoo: Minimal Language-Like Extensions.
-
-Spurdle, A. (2020). barsurf: Multivariate Function Visualization and Smooth Multiband Color Interpolation.
+Spurdle, A. (2020). barsurf: Contour Plots, 3D Plots, Vector Fields and Heatmaps.
 
 Genz, A., Bretz, F., Miwa, T., Mi, X. \& Hothorn, T. (2020). mvtnorm: Multivariate Normal and t Distributions.
 
@@ -573,15 +548,15 @@ Wand, M. (2020). KernSmooth: Functions for Kernel Smoothing Supporting Wand \& J
 
 \subsection* {Other R Packages}
 
-Feng, D., \& Tierney, L. (2013) misc3d: Miscellaneous 3D Plots.
+Feng, D., \& Tierney, L. (2020) misc3d: Miscellaneous 3D Plots.
 
-Spurdle, A. (2020). probhat: Multivariate Generalized Kernel Smoothing and Related Statistical Methods.
+Spurdle, A. (2021). probhat: Multivariate Generalized Kernel Smoothing and Related Statistical Methods.
 
 Spurdle, A. (2020). kubik: Cubic Hermite Splines and Related Optimization Methods.
 
-Ihaka, R., Murrell, P., Hornik, K., Fisher, J. Stauffer, R., Wilke, C., McWhite, C., \&\\Zeileis, A. (2019). colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes.
+Ihaka, R., Murrell, P., Hornik, K., Fisher, J. Stauffer, R., Wilke, C., McWhite, C., \&\\Zeileis, A. (2020). colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes.
 
-Ripley, B. (2020). MASS: Support Functions and Datasets for Venables and Ripley's MASS.
+Ripley, B. (2021). MASS: Support Functions and Datasets for Venables and Ripley's MASS.
 
 \subsection* {Journal Articles}
 
@@ -609,12 +584,12 @@ f <- ntvpdf (
 @
 
 <<>>=
-f %$% covariance.matrix
+f@covariance.matrix
 @
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=4>>=
-plot (f)
+plot (f, theme="blue")
 @
 \end {center}
 
@@ -624,17 +599,12 @@ They do not represent the bivariate-marginal distributions.
 Also, note the orientation of the plot.\\
 (Increasing y values, run diagonally from bottom-right to top-left).
 
-\begin {center}
-<<fig=TRUE, width=4.75, height=4>>=
-plot (f, FALSE)
-@
-\end {center}
-
 The following plot, gives the trivariate density values, where x is held constant at zero:
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=3>>=
 plotf_cfield (function (y, z) f (0, y, z), c (-3, 3),
+    theme="blue",
     xlab="y", ylab="z")
 @
 \end {center}
@@ -655,12 +625,12 @@ First, let's consider the bivariate distribution from the earlier section with z
 
 <<>>=
 f1 <- nbvpdf (0, 0, 1, 1, 0)
-f1 %$% covariance.matrix
+f1@covariance.matrix
 @
 
 \begin {center}
 <<fig=TRUE, width=4.75, height=4>>=
-plot (f1, all=TRUE, n=20)
+plot (f1, all=TRUE, n=20, theme="blue")
 @
 \end {center}
 
@@ -669,13 +639,13 @@ Second, let's consider bivariate distributions with positive correlation:\\
 
 <<>>=
 f2 <- nbvpdf (0, 0, 1, 1, 0.75)
-f2 %$% covariance.matrix
+f2@covariance.matrix
 @
 
 \newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=4>>=
-plot (f2, all=TRUE, n=20)
+plot (f2, all=TRUE, n=20, theme="blue")
 @
 \end {center}
 
@@ -683,13 +653,13 @@ Third, let's consider bivariate distributions with negative correlation:
 
 <<>>=
 f3 <- nbvpdf (0, 0, 1, 1, -0.75)
-f3 %$% covariance.matrix
+f3@covariance.matrix
 @
 
 \newpage
 \begin {center}
 <<fig=TRUE, width=4.75, height=4>>=
-plot (f3, all=TRUE, n=20)
+plot (f3, all=TRUE, n=20, theme="blue")
 @
 \end {center}
 

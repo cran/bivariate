@@ -1,22 +1,22 @@
-\name{41_main_plotting_functions}
+\name{42_plot_methods}
 \alias{Main Plotting Functions}
-\alias{bvplot.dubvpmf}
-\alias{bvplot.dubvcdf}
-\alias{bvplot.bnbvpmf}
-\alias{bvplot.bnbvcdf}
-\alias{bvplot.pbvpmf}
-\alias{bvplot.pbvcdf}
-\alias{bvplot.cubvpdf}
-\alias{bvplot.cubvcdf}
-\alias{bvplot.nbvpdf}
-\alias{bvplot.nbvcdf}
-\alias{bvplot.ntvpdf}
-\alias{bvplot.bmbvpdf}
-\alias{bvplot.bmbvcdf}
-\alias{bvplot.dtvpdf}
-\alias{bvplot.gbvpmf}
-\alias{bvplot.kbvpdf}
-\alias{bvplot.ebvcdf}
+\alias{bv.plotf.DUBVPMF}
+\alias{bv.plotf.DUBVCDF}
+\alias{bv.plotf.BNBVPMF}
+\alias{bv.plotf.BNBVCDF}
+\alias{bv.plotf.PBVPMF}
+\alias{bv.plotf.PBVCDF}
+\alias{bv.plotf.CUBVPDF}
+\alias{bv.plotf.CUBVCDF}
+\alias{bv.plotf.NBVPDF}
+\alias{bv.plotf.NBVCDF}
+\alias{bv.plotf.NTVPDF}
+\alias{bv.plotf.BMBVPDF}
+\alias{bv.plotf.BMBVCDF}
+\alias{bv.plotf.DTVPDF}
+\alias{bv.plotf.GBVPMF}
+\alias{bv.plotf.KBVPDF}
+\alias{bv.plotf.EBVCDF}
 \alias{ebvcdf_plot_reg}
 \alias{ebvcdf_plot_step_2d}
 \alias{ebvcdf_plot_step_3d}
@@ -24,61 +24,61 @@
 \description{
 Plot methods for bv (bivariate) and tv (trivariate) objects.
 
-DO NOT CALL bvplot, CALL plot.
+Note that you can use the standard plot function.
 
-Note that the misc3d package needs to be installed and loaded, in order to plot the trivariate normal distribution.
+Also, note that the misc3d package needs to be installed and loaded, in order to plot the trivariate normal distribution.
 }
 \usage{
 ########################################
 #discrete uniform
 ########################################
-\method{bvplot}{dubvpmf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
-\method{bvplot}{dubvcdf}(F, in3d=TRUE, \dots, xlim, ylim)
+\method{bv.plotf}{DUBVPMF}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
+\method{bv.plotf}{DUBVCDF}(F, in3d=TRUE, \dots, xlim, ylim)
 
 ########################################
 #binomial
 ########################################
-\method{bvplot}{bnbvpmf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
-\method{bvplot}{bnbvcdf}(F, in3d=TRUE, \dots, xlim, ylim)
+\method{bv.plotf}{BNBVPMF}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
+\method{bv.plotf}{BNBVCDF}(F, in3d=TRUE, \dots, xlim, ylim)
 
 ########################################
 #poisson
 ########################################
-\method{bvplot}{pbvpmf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
-\method{bvplot}{pbvcdf}(F, in3d=TRUE, \dots, xlim, ylim)
+\method{bv.plotf}{PBVPMF}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE)
+\method{bv.plotf}{PBVCDF}(F, in3d=TRUE, \dots, xlim, ylim)
 
 ########################################
 #continuous uniform
 ########################################
-\method{bvplot}{cubvpdf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE, n=20)
-\method{bvplot}{cubvcdf}(F, in3d=TRUE, \dots, xlim, ylim, n=20)
+\method{bv.plotf}{CUBVPDF}(f, in3d=TRUE, \dots, all=FALSE, n=20)
+\method{bv.plotf}{CUBVCDF}(F, in3d=TRUE, \dots, n=20)
 
 ########################################
 #normal
 #(bivariate and trivariate)
 ########################################
-\method{bvplot}{nbvpdf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE, n=30)
-\method{bvplot}{nbvcdf}(F, in3d=TRUE, \dots, xlim, ylim, n=30)
+\method{bv.plotf}{NBVPDF}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE, n=30)
+\method{bv.plotf}{NBVCDF}(F, in3d=TRUE, \dots, xlim, ylim, n=30)
 
-\method{bvplot}{ntvpdf}(f, iso=TRUE, \dots, xlim, ylim, zlim)
+\method{bv.plotf}{NTVPDF}(f, iso=TRUE, \dots, xlim, ylim, zlim)
 
 ########################################
 #bimodal
 ########################################
-\method{bvplot}{bmbvpdf}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE, n=40)
-\method{bvplot}{bmbvcdf}(F, in3d=TRUE, \dots, xlim, ylim, n=40)
+\method{bv.plotf}{BMBVPDF}(f, in3d=TRUE, \dots, xlim, ylim, all=FALSE, n=40)
+\method{bv.plotf}{BMBVCDF}(F, in3d=TRUE, \dots, xlim, ylim, n=40)
 
 ########################################
 #categorical, dirichlet, kernel, ecdf
 ########################################
-\method{bvplot}{gbvpmf}(f, in3d=TRUE, data, \dots)
+\method{bv.plotf}{GBVPMF}(f, in3d=TRUE, data, \dots)
 
-\method{bvplot}{dtvpdf}(f, in3d=TRUE, \dots, log=FALSE, n=30)
+\method{bv.plotf}{DTVPDF}(f, in3d=TRUE, \dots, log=FALSE, n=30)
 
-\method{bvplot}{kbvpdf}(fh, in3d=TRUE, data = (fh \%$\% "n" <= 2000), \dots,
+\method{bv.plotf}{KBVPDF}(fh, in3d=TRUE, data = (fh@n <= 2000), \dots,
     xlim, ylim, n=30, point.color="#00000030")
 
-\method{bvplot}{ebvcdf}(Fh, in3d=TRUE, \dots, reg = (Fh \%$\% "n" > 40) )
+\method{bv.plotf}{EBVCDF}(Fh, in3d=TRUE, \dots, reg = (Fh@n > 40) )
 
 ########################################
 #additional plotting functions
@@ -88,11 +88,13 @@ ebvcdf_plot_reg (Fh, in3d=TRUE, \dots, xlim, ylim, n=30)
 
 ebvcdf_plot_step_2d (Fh, data=TRUE, steps=data, \dots,
     point.color="#00000030", line.color="#000000", border.color="#808080",
-    main.colff = opt.litmus.fit (), rim.colff=rim.litmus.fit)
+    main.colff = st.litmus.fit (theme), rim.colff=rim.litmus.fit,
+    theme)
 
 ebvcdf_plot_step_3d (Fh, \dots,
-    top.color = opt.top.color (), side.color = opt.side.color (),
-    rim.color="#D0D0D0")
+    top.color = st.top.color (theme), side.color = st.side.color (theme),
+    rim.color="#D0D0D0",
+    theme)
 }
 \arguments{
 \item{f, F, fh, Fh}{
@@ -124,10 +126,12 @@ ebvcdf_plot_step_3d (Fh, \dots,
 	Litmus-fitting functions.\cr
 	Refer to the barsurf package.\cr\cr
 	Note that the default for rim.colff is rim.litmus.fit, which is defined in this package.}
+\item{theme}{Refer to barsurf package.}
 \item{\dots}{Other arguments for plotting functions in the barsurf package.\cr Refer to the details section.}
 }
 \details{
-DO NOT CALL bvplot, CALL plot.\cr
+You can use the standard plot function.\cr
+i.e. Calling plot will call the bv.plotf function.\cr
 
 \emph{GENERAL INFORMATION}\cr
 
@@ -182,10 +186,6 @@ The plot_ebvcdf_reg function plots the ECDF as a continuous surface, evaluated o
 
 Note that setting reg=FALSE for large sample sizes, is probably a bad idea.\cr
 (But the continuous approximation improves as the sample size increases).\cr
-
-\emph{NOTES}
-
-Currently, continuous uniform PDFs are plotted incorrectly, if you set xlim/ylim ranges outside the supported region.
 }
 \references{Refer to the vignette for an overview, references, theoretical background and better examples.}
 \seealso{
